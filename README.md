@@ -2,21 +2,15 @@
 
 ## 1. Problem Statement
 
-Smaller business sometimes do not always have enough time and/or money to make a website of their own. Barbers for instance can have trouble letting clients know when they are availaable to cut hair and maybe even when they have an appointment. Another example could be a new dentist office that does not necessarily get attention from the public. Possibly registering for a website that could show their rating and available appointments to local residents could be of use.
+Smaller business sometimes do not always have enough time and/or money to make a website of their own which can hinder their ability to be seen in the community and attract clients. They also may be using outdated scheduling software or paper planners that can become unwieldly with time.
 
 ## 2. Technical Solution
 
-Briefly describe a technical solution to your problem with a couple concrete scenarios.
+### Scenario 1
+Thoma the barber is not able to make a website of his own and is new to the city he is currently in. By registering for Appoints, he is able to create a dashboard for his business and display all the services he offers as a barber. His business slowly gets raving reviews and grows exponentially by being displayed near the top of the hairstyle category on Apppoints.
 
-### Example
-
-> Create an application for posting group runs on a formal calendar. Make it easy to sign up for runs.
-> 
-> ### Scenario 1
-> Emma is vacationing in Austin for two weeks. She wants to relax and enjoy her vacation, but she also wants to keep up on her running. Running helps her relax. She uses the Group Run application to quickly search for runs during her two-week window, located in Austin. She signs up for one or two. Running clubs in Austin know the best routes and she gets a chance to meet new people.
-> 
-> ### Scenario 2
-> Kelsey isn't a member of a running club, he's not ready for that commitment, but he does like to run with a group once in a while. Each weekend, he uses the Group Run application to browse runs near his Chicago neighborhood. If it feels right, he signs up and runs. There are a few running clubs near him. He doesn't have to join a club. He can pick and choose only the runs that interest him.
+### Scenario 2
+Diluc the dentist has trouble keeping up with his increase in clients' appointments. He used to have clients call him and he would write the appointments down in a scheduler but recently he has been getting calls even when he doesn't have it with him. He registers for Appoints and enters his availability per day. Now he has a site where he is able to track who is registered for what day and his customers have the ease of scheduling appointments from their phone.
 
 ## 3. Glossary
 
