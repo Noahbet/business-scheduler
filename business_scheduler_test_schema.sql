@@ -45,6 +45,19 @@ create table business (
         references business_type(type_id)
 );
 
+create table rating (
+	app_user_id int not null,
+    business_id int not null,
+    rating int not null,
+    constraint max_value_constraint check (rating <= 5),
+	constraint fk_rating_app_user_id
+        foreign key (app_user_id)
+        references app_user(app_user_id),
+	constraint fk_rating_business_id
+        foreign key (business_id)
+        references business(business_id)
+);
+
 create table business_hours (
     business_id int not null,
     monday_start time,
@@ -115,6 +128,18 @@ create table timeslot_service (
         references business(business_id),
 	constraint fk_timeslot_service_app_user_id
         foreign key (customer_id)
+        references app_user(app_user_id)
+);
+
+create table notification (
+	sender_id int not null,
+    reciever_id int not null,
+    message varchar(250) not null,
+    constraint fk_notification_sender_id
+        foreign key (sender_id)
+        references app_user(app_user_id),
+	constraint fk_notification_reciever_id
+        foreign key (reciever_id)
         references app_user(app_user_id)
 );
 
@@ -228,9 +253,14 @@ insert into app_role (name) values
     ('ROLE_BUSINESS_OWNER');
 
 insert into app_user_role (app_user_id, app_role_id) values
-    (1, 1), -- user1 has ROLE_ADMIN
-    (2, 2), -- user2 has ROLE_USER
-    (3, 3); -- user3 has ROLE_BUSINESS_OWNER
+    (1, 1),
+    (2, 2),
+    (3, 3);
+    
+insert into notification (sender_id, reciever_id, message) values
+    (1, 2, 'Sorry, I sick'),
+    (2, 3, 'I in hospital'),
+    (3, 2, "I don't like you");
 
 insert into business_type (business_type) values
     ('Retail'),
@@ -238,26 +268,32 @@ insert into business_type (business_type) values
     ('Service');
 
 insert into business (business_name, owner_id, type_id) values
-    ('Business 1', 1, 1), -- Business 1 owned by user1, Retail type
-    ('Business 2', 2, 2), -- Business 2 owned by user2, Restaurant type
-    ('Business 3', 3, 3); -- Business 3 owned by user3, Service type
+    ('Business 1', 1, 1),
+    ('Business 2', 2, 2),
+    ('Business 3', 3, 3);
+    
+insert into rating (app_user_id, business_id, rating) values
+	(1, 1, 1),
+    (1, 2, 1),
+    (1, 3, 1),
+    (2, 1, 5),
+    (3, 1, 5);
 
 insert into service (service_name, business_id, service_length, downtime, cost) values
-    ('Service A', 1, 60, 10, 50.00),  -- Service A for Business 1
-    ('Service B', 1, 45, 5, 35.00),   -- Service B for Business 1
-    ('Dish 1', 2, 30, 0, 20.00),     -- Dish 1 for Business 2
-    ('Dish 2', 2, 40, 0, 25.00),     -- Dish 2 for Business 2
-    ('Cleaning', 3, 120, 10, 80.00);  -- Cleaning for Business 3
+    ('Service A', 1, 60, 10, 50.00),
+    ('Service B', 1, 45, 5, 35.00),
+    ('Dish 1', 2, 30, 0, 20.00),
+    ('Dish 2', 2, 40, 0, 25.00),
+    ('Cleaning', 3, 120, 10, 80.00);
     
--- Example appointments:
 INSERT INTO timeslot_service (`date`, timeslot_id, service_id, business_id, customer_id)
 VALUES
-    ('2023-10-11', 1, 1, 1, 2);  -- an appointment for service a at business 1 by customer 2
+    ('2023-10-11', 1, 1, 1, 2);
 
 INSERT INTO timeslot_service (`date`, timeslot_id, service_id, business_id, customer_id)
 VALUES
-    ('2023-10-11', 3, 2, 1, 3);  -- an appointment for service b at business 1 by customer 3
+    ('2023-10-11', 3, 2, 1, 3);
 
 INSERT INTO timeslot_service (`date`, timeslot_id, service_id, business_id, customer_id)
 VALUES
-    ('2023-10-12', 2, 4, 2, 1);  -- an appointment for dish 2 at business 2 by customer 1
+    ('2023-10-12', 2, 4, 2, 1); 

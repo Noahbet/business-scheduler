@@ -45,6 +45,18 @@ create table business (
         references business_type(type_id)
 );
 
+create table rating (
+	app_user_id int not null,
+    business_id int not null,
+    rating int not null,
+	constraint fk_rating_app_user_id
+        foreign key (app_user_id)
+        references app_user(app_user_id),
+	constraint fk_rating_business_id
+        foreign key (business_id)
+        references business(business_id)
+);
+
 create table business_hours (
     business_id int not null,
     monday_start time,
@@ -115,6 +127,18 @@ create table timeslot_service (
         references business(business_id),
 	constraint fk_timeslot_service_app_user_id
         foreign key (customer_id)
+        references app_user(app_user_id)
+);
+
+create table notification (
+	sender_id int not null,
+    reciever_id int not null,
+    message varchar(250) not null,
+    constraint fk_notification_sender_id
+        foreign key (sender_id)
+        references app_user(app_user_id),
+	constraint fk_notification_reciever_id
+        foreign key (reciever_id)
         references app_user(app_user_id)
 );
 
