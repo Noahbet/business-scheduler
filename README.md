@@ -14,114 +14,94 @@ Diluc the dentist has trouble keeping up with his increase in clients' appointme
 
 ## 3. Glossary
 
-Define key domain terms. This won't map one-to-one with model classes, but it may be close.
-
-### Example
-
-> ### Running Club
-> An organization based on a shared love of running. Clubs have members. They host runs. Some are informal with infrequent runs. Others are large, have budgets, and charge membership fees.
-> ### Runner
-> Anyone who signs up for a run. Runners can be members of a club, but don't have to be. All members are runners but not all runners are members.
-> ### Member
-> A runner who is formally affiliated with a running club. A runner can be a member of more than one club.
-> ### Club Admin
-> A running club member with an administrator role. They have more privileges in the Group Run application. All admins are members, but not all members are admins.
-> ### Run
-> A running event with a specific time, date, and location. A run may also include a route (stretch goal).
+### Customer
+The current customer logged into the site. Can make apppointments with business for a business' service.
+### Owner
+The current owner for a business that is logged in. Can check who is scheduled with the business they are associated with and can cancel customer appointments as well. (May add employee)
+### Business
+The business which should be associated with a category and services. Customers can schedule appointments with them for a service they offer.
+### Services
+The servies offered by a specific business. Should be associated with a business, time length for the service, downtime for after the service, and price. (May add person who service is scheduled with)
+### Appointments
+Displays who the appointment is with, who scheduled the appoinment, what time/date is is, and the service it is for.
+### Rating
+The average rating by customers for a specific business.
+### Notification
+Notify customer or owner if an appointment was canceled. (Maybe add reason.)
 
 ## 4. High Level Requirement
 
-Briefly describe what each user role/authority can do. (These are user stories.)
-
-### Example
-
-> - Create a run (MEMBER, ADMIN).
-> - Edit a future run (MEMBER, ADMIN).
-> - Cancel a future run (ADMIN).
-> - Approve a run (ADMIN).
-> - Browse runs (anyone).
-> - Sign up for a run (authenticated).
-> - Apply for membership (authenticated).
-> - Approve a membership (ADMIN).
+- Create an appintment (CUSTOMER, OWNER).
+- Cancel an appointment (CUSTOMER, OWNER).
+- See all scheduled appointments by self (CUSTOMER, OWNER).
+- Search available businesses (anyone).
+- Search by category (anyone).
+- See next available appointments (anyone).
+- See all scheduled appointments for self (OWNER).
+- Cancel customer appointment (OWNER).
+- Set working hours for specific days (OWNER).
+- Edit working hours for specific days (OWNER).
+- Set services offered by business (OWNER).
+- Edit services offered by business (OWNER).
+- Upload picture for business dashboard (OWNER).
+- (Maybe add) Confirm appointment (OWNER).
 
 ## 5. User Stories/Scenarios
 
-Elaborate use stories.
+### Create an Appointment
 
-### Example
+Create an appointment for a business.
 
-> ### Create a Run
-> 
-> Create a run that runners can join.
-> 
-> Suggested data:
-> - brief description (e.g. "Saturday run along the river road.")
-> - date and time (must be in the future)
-> - a location (choose a level of difficulty from a single address field to a separately-tracked data entity)
-> - running club identifier (runs are always attached to a club. If a runner belongs to more than one club, they may need to choose)
-> - max participants (`null` for unlimited?)
-> - a route (data from a map integration, if appropriate)
-> 
-> **Precondition**: User must be logged in with the MEMBER or ADMIN role.
-> 
-> **Post-condition**: If the user is a MEMBER, the run is not automatically posted. It must be approved by an ADMIN. If the user is an ADMIN, they can choose to post it immediately or keep it in a pending status.
-> 
-> ### Edit a Run
-> 
-> Can only edit a run in the future.
-> 
-> **Precondition**: User must be logged in with the MEMBER or ADMIN role. Run datetime must be in the future.
-> 
-> **Post-condition**: If the user is a MEMBER, the run is set to a pending status even if it was initially posted. If the user is an ADMIN, they can choose to post it immediately or keep it in a pending status.
-> 
-> ### Cancel a Run
-> 
-> Can only cancel a run in the future.
-> 
-> **Precondition**: User must be logged in with the ADMIN role. Run datetime must be in the future.
-> 
-> **Post-condition**: Data is not deleted. The run is set to a canceled status and is no longer visible in the public UI. It *is* visible to the admin.
-> 
-> ### Approve a Run
-> 
-> Through an administrative UI, the ADMIN user finds pending runs for their club. They can choose to: post directly, edit and post, or cancel.
-> 
-> **Precondition**: User must be logged in with the ADMIN role.
-> 
-> **Post-condition**: None
-> 
-> ### Browse Runs
-> 
-> Decide how to display runs to anyone who uses the application.
-> 
-> - Text-based: Users filter by date and location. Display results as HTML with action UI to sign up.
-> - Calendar-based: Users page through a calendar UI. Limit by location or manage the UI so there's not 200 runs on a single day.
-> - Map-based: Users navigate to different locations to see future runs as pins on the map.
-> 
-> **Precondition**: None
-> 
-> **Post-condition**: None
-> 
-> ### Sign Up for a Run
-> 
-> Once a runner finds a run they're interested in, they can sign up.
-> 
-> **Precondition**: User must be logged in. The run must not be over-capacity. The runner cannot already be registered for the run.
-> 
-> **Post-condition**: Runner is registered for the run.
-> 
-> ### Apply for Membership (Optional)
-> 
-> If a runner enjoys a club's runs, they may wish to join the club. Give them an easy way to apply for membership.
-> 
-> **Precondition**: User must be logged in. The user cannot already be a member of the club.
-> 
-> **Post-condition**: Membership is in a pending status waiting for ADMIN approval.
-> 
-> ### Approve a Membership (Optional)
-> 
-> Through an administrative UI, the ADMIN user finds pending memberships for their club. They can choose to accept or reject the membership application.
-> 
-> **Precondition**: User must be logged in with the ADMIN role.
-> 
-> **Post-condition**: Data is not deleted. The membership is set to a rejected status. This prevents the runner from applying again and again.
+Suggested data:
+- date and time of appointment be selected
+- business appointment is with
+- service which appointment is with
+
+**Precondition**: User must be logged in with the CUSTOMER or OWNER role.
+
+**Post-condition**: Appointment may have to have appointment confirmed by business owner if added.
+
+### Cancel an Appointment (Customer)
+
+Can cancel an appointment in the future.
+
+**Precondition**: User must be logged in with the CUSTOMER or OWNER role. Appointment datetime must be in the future.
+
+**Post-condition**: Should notify owner that appointment was canceled.
+
+### Cancel an Appointment (Owner)
+
+Can cancel an appointment in the future.
+
+**Precondition**: User must be logged in with the OWNER role. Appointment datetime must be in the future.
+
+**Post-condition**: Should notify customer that appointment was canceled.
+
+### Browse Businesses
+
+Search through available business and should display business cards.
+
+- Search query
+
+**Precondition**: None
+
+**Post-condition**: None
+
+### See Next Available Appointments
+
+Should be display when a service for a business is clicked.
+
+**Precondition**: None
+
+**Post-condition**: None
+
+### Upload a Backdrop
+
+Owner uploads a picture for business dashboard.
+
+Suggested data:
+- a picture file
+
+**Precondition**: User must be logged in with the OWNER role.
+
+**Post-condition**: None
