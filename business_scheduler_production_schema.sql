@@ -27,28 +27,29 @@ create table app_user_role (
         references app_role(app_role_id)
 );
 
-create table business_type (
-	type_id int primary key auto_increment,
-	business_type varchar(100) not null
+create table business_category (
+	category_id int primary key auto_increment,
+	category varchar(100) not null
 );
 
 create table business (
 	business_id int primary key auto_increment,
 	business_name varchar(100) not null,
 	owner_id int not null,
-    type_id int not null,
+    category_id int not null,
     constraint fk_business_app_user_id
         foreign key (owner_id)
         references app_user(app_user_id),
-	constraint fk_business_type_id
-        foreign key (type_id)
-        references business_type(type_id)
+	constraint fk_business_category_id
+        foreign key (category_id)
+        references business_category(category_id)
 );
 
 create table rating (
 	app_user_id int not null,
     business_id int not null,
-    rating int not null,
+    rating_value int not null,
+    constraint max_value_constraint check (rating_value <= 5),
 	constraint fk_rating_app_user_id
         foreign key (app_user_id)
         references app_user(app_user_id),
@@ -110,7 +111,8 @@ create table service (
         references business(business_id)
 );
 
-create table timeslot_service (
+create table appointment (
+	appointment_id int primary key auto_increment,
 	`date` date not null,
     timeslot_id int not null,
     service_id int not null,
@@ -240,3 +242,4 @@ values
     ('23:15:00'),
     ('23:30:00'),
     ('23:45:00');
+    
