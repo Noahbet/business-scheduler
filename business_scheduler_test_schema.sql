@@ -97,9 +97,7 @@ create table service (
 	service_id int primary key auto_increment,
     service_name varchar(100) not null,
     business_id int not null,
-    service_length int not null,
-    downtime int,
-    total_service_length int as (service_length + downtime),
+    total_service_length int not null,
     cost decimal(10, 2) not null,
     constraint fk_business_business_id
         foreign key (business_id)
@@ -196,12 +194,12 @@ insert into rating (app_user_id, business_id, rating_value) values
     (1, 2, 1),
     (1, 3, 1);
 
-insert into service (service_name, business_id, service_length, downtime, cost) values
-    ('Service A', 1, 60, 10, 50.00),
-    ('Service B', 1, 45, 5, 35.00),
-    ('Dish 1', 2, 30, 0, 20.00),
-    ('Dish 2', 2, 40, 0, 25.00),
-    ('Cleaning', 3, 120, 10, 80.00);
+insert into service (service_name, business_id, total_service_length, cost) values
+    ('Service A', 1, 70, 50.00),
+    ('Service B', 1, 50, 35.00),
+    ('Dish 1', 2, 30, 20.00),
+    ('Dish 2', 2, 40, 25.00),
+    ('Cleaning', 3, 130, 80.00);
     
 INSERT INTO appointment (date_time, service_id, business_id, customer_id)
 VALUES

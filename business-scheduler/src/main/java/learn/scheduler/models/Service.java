@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 public class Service {
 
     private int serviceId;
+    private int businessId;
     private String serviceName;
     private int totalTimeLength;
     private BigDecimal cost;
@@ -25,6 +26,10 @@ public class Service {
 
     public void setServiceId(int serviceId) {
         this.serviceId = serviceId;
+    }
+
+    public int getBusinessId() {
+        return businessId;
     }
 
     public String getServiceName() {
