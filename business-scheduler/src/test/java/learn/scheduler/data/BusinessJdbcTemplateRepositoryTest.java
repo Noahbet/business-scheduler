@@ -1,6 +1,5 @@
 package learn.scheduler.data;
 
-import learn.scheduler.data.BusinessJdbcTemplateRepository;
 import learn.scheduler.models.Business;
 import learn.scheduler.models.Category;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

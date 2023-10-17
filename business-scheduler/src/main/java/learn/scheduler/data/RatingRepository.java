@@ -1,9 +1,6 @@
 package learn.scheduler.data;
 
-import learn.scheduler.models.Business;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 public interface RatingRepository {
 

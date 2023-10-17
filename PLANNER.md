@@ -6,9 +6,9 @@
 
 ### Work on API data layer
 
-- Complete AppUser model, mapper, and repo
+- Complete AppUsser model, mapper, and repo
 - Complete Business model, mapper, and repo
-- Complete Service model, mapper, and repo
+- Complete Rating model, mapper, and repo
 
 ## 10-17-23
 
@@ -17,14 +17,18 @@
 - Complete Appointment model, mapper, and repo
 - Complete Service model, mapper, and repo
 - Complete Notification model, mapper, and repo
+
+## 10-18-23
+
+### Finish on API service layer
+
 - Complete AppUser Service
 - Complete Business Service
 - Complete Service Service
 - Complete Appointment Service
-- Complete Service Service
 - Complete Notification Service
 
-## 10-18-23
+## 10-19-23
 
 ### Finish on API controller layer
 
@@ -35,17 +39,13 @@
 - Complete Service Controller
 - Complete Notification Controller
 
-## 10-19-23
-
-### Work on website design
-
 ## 10-20-23
 
 ### Finish on website design
 
 ## 10-21-23
 
-### Work on website functionality
+### Work on website design
 
 ## 10-22-23
 

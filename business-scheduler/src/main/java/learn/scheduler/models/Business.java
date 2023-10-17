@@ -1,16 +1,21 @@
 package learn.scheduler.models;
 
+import learn.scheduler.data.RatingJdbcTemplateRepository;
+import org.springframework.jdbc.core.JdbcTemplate;
+
 import java.util.List;
 
 public class Business {
 
     private int businessId;
     private String businessName;
+    private List<Availability> availability;
     private int ownerId;
     private Category category;
     private double rating;
     private List<Service> services;
-    private List<Availability> availability;
+    private List<Appointment> appointments;
+    private final RatingJdbcTemplateRepository ratingRepository = new RatingJdbcTemplateRepository(new JdbcTemplate());
 
     public Business() {
     }
@@ -58,8 +63,8 @@ public class Business {
         return rating;
     }
 
-    public void setRating(double rating) {
-        this.rating = rating;
+    public void setRating() {
+        this.rating = ratingRepository.getAvgRatingById(businessId);
     }
 
     public List<Service> getServices() {
@@ -76,6 +81,14 @@ public class Business {
 
     public void setAvailability(List<Availability> availability) {
         this.availability = availability;
+    }
+
+    public List<Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(List<Appointment> appointments) {
+        this.appointments = appointments;
     }
 
     @Override
