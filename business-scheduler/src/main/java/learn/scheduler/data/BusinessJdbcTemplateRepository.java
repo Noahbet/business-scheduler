@@ -94,5 +94,4 @@ public class BusinessJdbcTemplateRepository implements BusinessRepository{
         final String sql = "delete from business where business_id = ?";
         return jdbcTemplate.update(sql, businessId) > 0;
     }
-
 }

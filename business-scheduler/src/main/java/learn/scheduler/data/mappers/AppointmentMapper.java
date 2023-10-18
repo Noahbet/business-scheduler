@@ -21,6 +21,7 @@ public class AppointmentMapper implements RowMapper<Appointment> {
         Appointment appointment = new Appointment(
                 rs.getInt("appointment_id"),
                 rs.getInt("customer_id"),
+                rs.getInt("business_id"),
                 rs.getObject("date_time", LocalDateTime.class));
         appointment.setService(service);
 
