@@ -33,7 +33,44 @@ public class Availability {
     private LocalTime sundayBreakStart;
     private LocalTime sundayBreakEnd;
 
-    public Availability() {
+    public Availability(LocalTime mondayStart, LocalTime mondayEnd, LocalTime mondayBreakStart,
+                        LocalTime mondayBreakEnd, LocalTime tuesdayStart, LocalTime tuesdayEnd,
+                        LocalTime tuesdayBreakStart, LocalTime tuesdayBreakEnd, LocalTime wednesdayStart,
+                        LocalTime wednesdayEnd, LocalTime wednesdayBreakStart, LocalTime wednesdayBreakEnd,
+                        LocalTime thursdayStart, LocalTime thursdayEnd, LocalTime thursdayBreakStart,
+                        LocalTime thursdayBreakEnd, LocalTime fridayStart, LocalTime fridayEnd,
+                        LocalTime fridayBreakStart, LocalTime fridayBreakEnd, LocalTime saturdayStart,
+                        LocalTime saturdayEnd, LocalTime saturdayBreakStart, LocalTime saturdayBreakEnd,
+                        LocalTime sundayStart, LocalTime sundayEnd, LocalTime sundayBreakStart,
+                        LocalTime sundayBreakEnd) {
+        this.mondayStart = mondayStart;
+        this.mondayEnd = mondayEnd;
+        this.mondayBreakStart = mondayBreakStart;
+        this.mondayBreakEnd = mondayBreakEnd;
+        this.tuesdayStart = tuesdayStart;
+        this.tuesdayEnd = tuesdayEnd;
+        this.tuesdayBreakStart = tuesdayBreakStart;
+        this.tuesdayBreakEnd = tuesdayBreakEnd;
+        this.wednesdayStart = wednesdayStart;
+        this.wednesdayEnd = wednesdayEnd;
+        this.wednesdayBreakStart = wednesdayBreakStart;
+        this.wednesdayBreakEnd = wednesdayBreakEnd;
+        this.thursdayStart = thursdayStart;
+        this.thursdayEnd = thursdayEnd;
+        this.thursdayBreakStart = thursdayBreakStart;
+        this.thursdayBreakEnd = thursdayBreakEnd;
+        this.fridayStart = fridayStart;
+        this.fridayEnd = fridayEnd;
+        this.fridayBreakStart = fridayBreakStart;
+        this.fridayBreakEnd = fridayBreakEnd;
+        this.saturdayStart = saturdayStart;
+        this.saturdayEnd = saturdayEnd;
+        this.saturdayBreakStart = saturdayBreakStart;
+        this.saturdayBreakEnd = saturdayBreakEnd;
+        this.sundayStart = sundayStart;
+        this.sundayEnd = sundayEnd;
+        this.sundayBreakStart = sundayBreakStart;
+        this.sundayBreakEnd = sundayBreakEnd;
     }
 
     public LocalTime getMondayStart() {
