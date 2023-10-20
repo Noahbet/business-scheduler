@@ -12,19 +12,12 @@ public class AppointmentMapper implements RowMapper<Appointment> {
 
     @Override
     public Appointment mapRow(ResultSet rs, int i) throws SQLException {
-        Service service = new Service(
-                rs.getInt("service_id"),
-                rs.getString("service_name"),
-                rs.getInt("total_service_length"),
-                rs.getBigDecimal("cost"));
 
-        Appointment appointment = new Appointment(
+        return new Appointment(
                 rs.getInt("appointment_id"),
                 rs.getInt("customer_id"),
                 rs.getInt("business_id"),
+                rs.getInt("service_id"),
                 rs.getObject("date_time", LocalDateTime.class));
-        appointment.setService(service);
-
-        return appointment;
     }
 }

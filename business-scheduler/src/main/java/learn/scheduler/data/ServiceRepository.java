@@ -10,6 +10,9 @@ public interface ServiceRepository {
     List<Service> getServicesForBusiness(int businessId);
 
     @Transactional
+    Service getServiceById(int serviceId);
+
+    @Transactional
     Service addService(Service service);
 
     boolean updateService(Service updatedService);

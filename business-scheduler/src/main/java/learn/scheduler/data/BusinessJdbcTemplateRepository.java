@@ -52,6 +52,19 @@ public class BusinessJdbcTemplateRepository implements BusinessRepository{
 
     @Override
     @Transactional
+    public Business searchById(int businessId) {
+
+        final String sql = "select b.business_id, b.business_name, b.owner_id, bc.category "
+                + "from business b "
+                + "inner join business_category bc on b.category_id = bc.category_id "
+                + "where b.business_id = ?;";
+
+        return jdbcTemplate.query(sql, new BusinessMapper(), businessId)
+                .stream().findFirst().orElse(null);
+    }
+
+    @Override
+    @Transactional
     public Business addBusiness(Business business) {
 
         final String sql = "insert into business "
@@ -77,15 +90,15 @@ public class BusinessJdbcTemplateRepository implements BusinessRepository{
     }
 
     @Override
-    public boolean updateBusinessName(String businessName, String updatedName) {
+    public boolean updateBusinessName(int businessId, String updatedName) {
 
         final String sql = "update business set "
                 + "business_name = ?"
-                + "where business_name = ?;";
+                + "where business_id = ?;";
 
         return jdbcTemplate.update(sql,
                 updatedName,
-                businessName) > 0;
+                businessId) > 0;
     }
 
     @Override

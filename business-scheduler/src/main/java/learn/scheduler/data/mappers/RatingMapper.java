@@ -9,6 +9,6 @@ public class RatingMapper implements RowMapper<Double> {
 
     @Override
     public Double mapRow(ResultSet rs, int i) throws SQLException {
-        return rs.getObject("rating_value", Double.class);
+        return rs.getDouble("rating_value");
     }
 }

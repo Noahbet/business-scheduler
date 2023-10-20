@@ -3,25 +3,39 @@ package learn.scheduler.models;
 import learn.scheduler.data.RatingJdbcTemplateRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 public class Business {
 
+    @PositiveOrZero
     private int businessId;
+    @NotBlank
     private String businessName;
     private List<Availability> availability;
+    @Positive
     private int ownerId;
+    @NotNull
     private Category category;
+    @PositiveOrZero
     private double rating;
     private List<Service> services;
     private List<Appointment> appointments;
-    private final RatingJdbcTemplateRepository ratingRepository = new RatingJdbcTemplateRepository(new JdbcTemplate());
 
     public Business() {
     }
 
     public Business(int businessId, String businessName, int ownerId, Category category) {
         this.businessId = businessId;
+        this.businessName = businessName;
+        this.ownerId = ownerId;
+        this.category = category;
+    }
+
+    public Business(String businessName, int ownerId, Category category) {
         this.businessName = businessName;
         this.ownerId = ownerId;
         this.category = category;
@@ -63,8 +77,8 @@ public class Business {
         return rating;
     }
 
-    public void setRating() {
-        this.rating = ratingRepository.getAvgRatingById(businessId);
+    public void setRating(double rating) {
+        this.rating = rating;
     }
 
     public List<Service> getServices() {

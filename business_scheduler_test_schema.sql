@@ -58,7 +58,8 @@ create table rating (
         references business(business_id)
 );
 
-create table business_hours (
+create table availability (
+	availability_id int primary key auto_increment,
     business_id int not null,
     monday_start time,
     monday_end time,
@@ -88,7 +89,7 @@ create table business_hours (
     sunday_end time,
     sunday_break_start time,
     sunday_break_end time,
-    constraint fk_business_hours_business_id
+    constraint fk_availability_business_id
         foreign key (business_id)
         references business(business_id)
 );
@@ -145,6 +146,8 @@ begin
 	alter table service auto_increment = 1;
 	delete from rating;
 	alter table rating auto_increment = 1;
+    delete from availability;
+	alter table availability auto_increment = 1;
 	delete from business;
 	alter table business auto_increment = 1;
     delete from business_category;
@@ -159,18 +162,18 @@ begin
 	alter table app_user auto_increment = 1;
 
 insert into app_user (email, password_hash, enabled) values
-    ('user1', 'hash1', 1),
-    ('user2', 'hash2', 1),
+    ('john@smith.com', '$2a$10$ntB7CsRKQzuLoKY3rfoAQen5nNyiC/U60wBsWnnYrtQQi8Z3IZzQa', 1),
+    ('sally@jones.com', '$2a$10$ntB7CsRKQzuLoKY3rfoAQen5nNyiC/U60wBsWnnYrtQQi8Z3IZzQa', 1),
     ('user3', 'hash3', 1);
 
 insert into app_role (name) values
-    ('ROLE_ADMIN'),
-    ('ROLE_USER'),
-    ('ROLE_BUSINESS_OWNER');
+    ('USER'),
+    ('ADMIN'),
+    ('OWNER');
 
 insert into app_user_role (app_user_id, app_role_id) values
-    (1, 1),
-    (2, 2),
+    (1, 2),
+    (2, 1),
     (3, 3);
     
 insert into notification (sender_id, receiver_id, message) values
@@ -203,7 +206,7 @@ insert into service (service_name, business_id, total_service_length, cost) valu
     
 INSERT INTO appointment (date_time, service_id, business_id, customer_id)
 VALUES
-    ('2023-10-11 15:30:00', 1, 1, 2);
+    ('2023-10-11 15:30:00', 1, 1, 1);
 
     
 end //

@@ -15,9 +15,12 @@ public interface BusinessRepository {
     List<Business> searchByCategory(Category category);
 
     @Transactional
+    Business searchById(int businessId);
+
+    @Transactional
     Business addBusiness(Business business);
 
-    boolean updateBusinessName(String businessName, String updatedName);
+    boolean updateBusinessName(int businessId, String updatedName);
 
     boolean deleteBusiness(int businessId);
 }

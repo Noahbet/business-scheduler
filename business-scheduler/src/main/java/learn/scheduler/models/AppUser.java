@@ -12,14 +12,14 @@ import java.util.stream.Collectors;
 public class AppUser implements UserDetails {
 
     private int appUserId;
-    private final String username;
+    private final String email;
     private final String password;
     private boolean enabled;
     private final Collection<GrantedAuthority> authorities;
 
-    public AppUser(int appUserId, String username, String password, boolean enabled, List<String> roles) {
+    public AppUser(int appUserId, String email, String password, boolean enabled, List<String> roles) {
         this.appUserId = appUserId;
-        this.username = username;
+        this.email = email;
         this.password = password;
         this.enabled = enabled;
         this.authorities = convertRolesToAuthorities(roles);
@@ -43,7 +43,7 @@ public class AppUser implements UserDetails {
 
     @Override
     public String getUsername() {
-        return username;
+        return email;
     }
 
     @Override

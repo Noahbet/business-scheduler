@@ -4,6 +4,7 @@ import learn.scheduler.data.mappers.AppointmentMapper;
 import learn.scheduler.models.Appointment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.PreparedStatement;
@@ -11,6 +12,7 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
 
+@Repository
 public class AppointmentJdbcTemplateRepository implements AppointmentRepository{
 
     private final JdbcTemplate jdbcTemplate;
@@ -36,11 +38,10 @@ public class AppointmentJdbcTemplateRepository implements AppointmentRepository{
     @Transactional
     public List<Appointment> searchByBusinessId(int businessId) {
 
-        final String sql = "select a.appointment_id, a.customer_id, a.business_id, a.date_time, "
-                + "s.service_id, s.service_name, s.total_service_length, s.cost "
-                + "from appointment a "
-                + "inner join service s on a.service_id = s.service_id "
-                + "where a.business_id = ?;";
+        final String sql = "select appointment_id, customer_id, business_id, date_time, "
+                + "service_id "
+                + "from appointment "
+                + "where business_id = ?;";
 
         return jdbcTemplate.query(sql, new AppointmentMapper(), businessId);
     }
@@ -58,7 +59,7 @@ public class AppointmentJdbcTemplateRepository implements AppointmentRepository{
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, appointment.getCustomerId());
             ps.setInt(2, appointment.getBusinessId());
-            ps.setInt(3, appointment.getService().getServiceId());
+            ps.setInt(3, appointment.getServiceId());
             ps.setObject(4, appointment.getAppointmentDateTime());
             return ps;
         }, keyHolder);

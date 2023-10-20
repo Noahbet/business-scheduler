@@ -67,6 +67,4 @@ public class NotificationJdbcTemplateRepository implements NotificationRepositor
         final String sql = "delete from notification where notification_id = ?";
         return jdbcTemplate.update(sql, notificationId) > 0;
     }
-
-
 }

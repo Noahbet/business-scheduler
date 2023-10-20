@@ -1,19 +1,35 @@
 package learn.scheduler.models;
 
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
 public class Appointment {
 
+    @PositiveOrZero
     private int appointmentId;
+    @Positive(message ="CustomerId should be a positive number.")
     private int customerId;
+    @Positive(message ="BusinessId should be a positive number.")
     private int businessId;
+    @Positive(message ="BusinessId should be a positive number.")
+    private int serviceId;
+    @NotNull(message ="AppointmentDateTime should not be null.")
+    @FutureOrPresent(message ="AppointmentDateTime should not be in the past.")
     private LocalDateTime appointmentDateTime;
-    private Service service;
 
-    public Appointment(int appointmentId, int customerId, int businessId, LocalDateTime appointmentDateTime) {
+    public Appointment(int appointmentId, int customerId, int businessId,
+                       int serviceId, LocalDateTime appointmentDateTime) {
         this.appointmentId = appointmentId;
         this.customerId = customerId;
         this.businessId = businessId;
+        this.serviceId = serviceId;
+        this.appointmentDateTime = appointmentDateTime;
+    }
+
+    public Appointment(int customerId, int businessId, int serviceId, LocalDateTime appointmentDateTime) {
+        this.customerId = customerId;
+        this.businessId = businessId;
+        this.serviceId = serviceId;
         this.appointmentDateTime = appointmentDateTime;
     }
 
@@ -49,11 +65,11 @@ public class Appointment {
         this.appointmentDateTime = appointmentDateTime;
     }
 
-    public Service getService() {
-        return service;
+    public int getServiceId() {
+        return serviceId;
     }
 
-    public void setService(Service service) {
-        this.service = service;
+    public void setServiceId(int serviceId) {
+        this.serviceId = serviceId;
     }
 }

@@ -28,7 +28,7 @@ public class RatingJdbcTemplateRepository implements RatingRepository{
 
     @Override
     public double countRatingsForBusiness(int businessId) {
-        final String sql = "select count(rating_value) rating_value "
+        final String sql = "select cast(count(rating_value) as double) rating_value "
                 + "from rating "
                 + "where business_id = ?";
 
@@ -44,7 +44,7 @@ public class RatingJdbcTemplateRepository implements RatingRepository{
                 + "(business_id, app_user_id, rating_value) "
                 + "values (?,?,?);";
 
-        return jdbcTemplate.update(sql, businessId, userId, rating) > 0;
+        return jdbcTemplate.update(sql, businessId, userId, (double) rating) > 0;
     }
 
     @Override
@@ -55,6 +55,6 @@ public class RatingJdbcTemplateRepository implements RatingRepository{
                 + "where business_id = ? "
                 + "and app_user_id = ?;";
 
-        return jdbcTemplate.update(sql, rating, businessId, userId) > 0;
+        return jdbcTemplate.update(sql, (double) rating, businessId, userId) > 0;
     }
 }

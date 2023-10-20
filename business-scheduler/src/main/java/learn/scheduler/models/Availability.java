@@ -1,39 +1,75 @@
 package learn.scheduler.models;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalTime;
 
 public class Availability {
 
+    private int availabilityId;
+    @Positive
+    private int businessId;
+    @NotNull(message ="MondayStart should not be null.")
     private LocalTime mondayStart;
+    @NotNull(message ="MondayEnd should not be null.")
     private LocalTime mondayEnd;
+    @NotNull(message ="MondayBreakStart should not be null.")
     private LocalTime mondayBreakStart;
+    @NotNull(message ="MondayBreakEnd should not be null.")
     private LocalTime mondayBreakEnd;
+    @NotNull(message ="TuesdayStart should not be null.")
     private LocalTime tuesdayStart;
+    @NotNull(message ="TuesdayEnd should not be null.")
     private LocalTime tuesdayEnd;
+    @NotNull(message ="TuesdayBreakStart should not be null.")
     private LocalTime tuesdayBreakStart;
+    @NotNull(message ="TuesdayBreakEnd should not be null.")
     private LocalTime tuesdayBreakEnd;
+    @NotNull(message ="WednesdayStart should not be null.")
     private LocalTime wednesdayStart;
+    @NotNull(message ="WednesdayEnd should not be null.")
     private LocalTime wednesdayEnd;
+    @NotNull(message ="WednesdayBreakStart should not be null.")
     private LocalTime wednesdayBreakStart;
+    @NotNull(message ="WednesdayBreakEnd should not be null.")
     private LocalTime wednesdayBreakEnd;
+    @NotNull(message ="ThursdayStart should not be null.")
     private LocalTime thursdayStart;
+    @NotNull(message ="ThursdayEnd should not be null.")
     private LocalTime thursdayEnd;
+    @NotNull(message ="ThursdayBreakStart should not be null.")
     private LocalTime thursdayBreakStart;
+    @NotNull(message ="ThursdayBreakEnd should not be null.")
     private LocalTime thursdayBreakEnd;
+    @NotNull(message ="FridayStart should not be null.")
     private LocalTime fridayStart;
+    @NotNull(message ="FridayEnd should not be null.")
     private LocalTime fridayEnd;
+    @NotNull(message ="FridayBreakStart should not be null.")
     private LocalTime fridayBreakStart;
+    @NotNull(message ="FridayBreakEnd should not be null.")
     private LocalTime fridayBreakEnd;
+    @NotNull(message ="SaturdayStart should not be null.")
     private LocalTime saturdayStart;
+    @NotNull(message ="SaturdayEnd should not be null.")
     private LocalTime saturdayEnd;
+    @NotNull(message ="SaturdayBreakStart should not be null.")
     private LocalTime saturdayBreakStart;
+    @NotNull(message ="SaturdayBreakEnd should not be null.")
     private LocalTime saturdayBreakEnd;
+    @NotNull(message ="SundayStart should not be null.")
     private LocalTime sundayStart;
+    @NotNull(message ="SundayEnd should not be null.")
     private LocalTime sundayEnd;
+    @NotNull(message ="SundayBreakStart should not be null.")
     private LocalTime sundayBreakStart;
+    @NotNull(message ="SundayBreakEnd should not be null.")
     private LocalTime sundayBreakEnd;
 
-    public Availability(LocalTime mondayStart, LocalTime mondayEnd, LocalTime mondayBreakStart,
+    public Availability(int businessId,
+            LocalTime mondayStart, LocalTime mondayEnd, LocalTime mondayBreakStart,
                         LocalTime mondayBreakEnd, LocalTime tuesdayStart, LocalTime tuesdayEnd,
                         LocalTime tuesdayBreakStart, LocalTime tuesdayBreakEnd, LocalTime wednesdayStart,
                         LocalTime wednesdayEnd, LocalTime wednesdayBreakStart, LocalTime wednesdayBreakEnd,
@@ -43,6 +79,7 @@ public class Availability {
                         LocalTime saturdayEnd, LocalTime saturdayBreakStart, LocalTime saturdayBreakEnd,
                         LocalTime sundayStart, LocalTime sundayEnd, LocalTime sundayBreakStart,
                         LocalTime sundayBreakEnd) {
+        this.businessId = businessId;
         this.mondayStart = mondayStart;
         this.mondayEnd = mondayEnd;
         this.mondayBreakStart = mondayBreakStart;
@@ -71,6 +108,22 @@ public class Availability {
         this.sundayEnd = sundayEnd;
         this.sundayBreakStart = sundayBreakStart;
         this.sundayBreakEnd = sundayBreakEnd;
+    }
+
+    public int getAvailabilityId() {
+        return availabilityId;
+    }
+
+    public void setAvailabilityId(int availabilityId) {
+        this.availabilityId = availabilityId;
+    }
+
+    public int getBusinessId() {
+        return businessId;
+    }
+
+    public void setBusinessId(int businessId) {
+        this.businessId = businessId;
     }
 
     public LocalTime getMondayStart() {

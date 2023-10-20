@@ -10,8 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class BusinessJdbcTemplateRepositoryTest {
@@ -51,6 +50,13 @@ class BusinessJdbcTemplateRepositoryTest {
     }
 
     @Test
+    void shouldFindById() {
+        Business actual = repository.searchById(1);
+
+        assertNotNull(actual);
+    }
+
+    @Test
     void shouldAddBusiness() {
         Business expected = makeBusiness();
         repository.addBusiness(expected);
@@ -63,7 +69,7 @@ class BusinessJdbcTemplateRepositoryTest {
 
     @Test
     void shouldAddUpdateBusiness() {
-        assertTrue(repository.updateBusinessName("Business 1", "Noah's One Stop Shop"));
+        assertTrue(repository.updateBusinessName(1, "Noah's One Stop Shop"));
         List<Business> actual = repository.searchBusinesses("Noah's One Stop Shop");
 
         assertEquals("Noah's One Stop Shop", actual.get(0).getBusinessName());
@@ -79,10 +85,7 @@ class BusinessJdbcTemplateRepositoryTest {
     }
 
     private Business makeBusiness() {
-        Business business = new Business();
-        business.setBusinessName("Test");
-        business.setOwnerId(1);
-        business.setCategory(Category.RESTAURANT);
-        return business;
+
+        return new Business("Test", 1, Category.RESTAURANT);
     }
 }

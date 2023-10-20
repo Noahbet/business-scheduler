@@ -25,11 +25,23 @@ public class ServiceJdbcTemplateRepository implements ServiceRepository{
     @Transactional
     public List<Service> getServicesForBusiness(int businessId) {
 
-        final String sql = "select service_id, service_name, total_service_length, cost "
+        final String sql = "select service_id, business_id, service_name, total_service_length, cost "
                 + "from service "
                 + "where business_id = ?;";
 
         return jdbcTemplate.query(sql, new ServiceMapper(), businessId);
+    }
+
+    @Override
+    @Transactional
+    public Service getServiceById(int serviceId) {
+
+        final String sql = "select service_id, business_id, service_name, total_service_length, cost "
+                + "from service "
+                + "where service_id = ?;";
+
+        return jdbcTemplate.query(sql, new ServiceMapper(), serviceId)
+                .stream().findFirst().orElse(null);
     }
 
     @Override
@@ -46,7 +58,7 @@ public class ServiceJdbcTemplateRepository implements ServiceRepository{
             ps.setString(1, service.getServiceName());
             ps.setInt(2, service.getBusinessId());
             ps.setInt(3, service.getTotalTimeLength());
-            ps.setBigDecimal(3, service.getCost());
+            ps.setBigDecimal(4, service.getCost());
 
             return ps;
         }, keyHolder);
