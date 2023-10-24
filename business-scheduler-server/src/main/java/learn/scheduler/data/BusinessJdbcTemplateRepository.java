@@ -44,7 +44,7 @@ public class BusinessJdbcTemplateRepository implements BusinessRepository{
 
         final String sql = "select b.business_id, b.business_name, b.owner_id, bc.category "
                 + "from business b "
-                + "inner join business_category bc on b.category_id = bc.category_id "
+                + "right join business_category bc on b.category_id = bc.category_id "
                 + "where bc.category = ?;";
 
         return jdbcTemplate.query(sql, new BusinessMapper(), categoryString);
@@ -104,7 +104,17 @@ public class BusinessJdbcTemplateRepository implements BusinessRepository{
     @Override
     public boolean deleteBusiness(int businessId) {
 
-        final String sql = "delete from business where business_id = ?";
-        return jdbcTemplate.update(sql, businessId) > 0;
+        Business business = searchById(businessId);
+
+        if (business == null) {
+            return false;
+        }
+
+        jdbcTemplate.update("delete from app_user_role where app_user_id = ? and app_role_id = 3;", business.getOwnerId());
+        jdbcTemplate.update("delete from availability where business_id = ?;", businessId);
+        jdbcTemplate.update("delete from appointment where business_id = ?;", businessId);
+        jdbcTemplate.update("delete from rating where business_id = ?;", businessId);
+        jdbcTemplate.update("delete from service where business_id = ?;", businessId);
+        return jdbcTemplate.update("delete from business where business_id = ?", businessId) > 0;
     }
 }

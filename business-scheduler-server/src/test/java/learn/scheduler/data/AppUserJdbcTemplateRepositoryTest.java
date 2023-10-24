@@ -20,58 +20,45 @@ class AppUserJdbcTemplateRepositoryTest {
     @Autowired
     AppUserJdbcTemplateRepository repository;
 
-    static boolean hasRun = false;
-
     @BeforeEach
     void setup() {
-        if (!hasRun) {
-            jdbcTemplate.update("call set_known_good_state();");
-            hasRun = true;
-        }
+        jdbcTemplate.execute("call set_known_good_state();");
     }
 
     @Test
-    void shouldFindJohnSmithByEmail() {
-        AppUser actual = repository.findByEmail("john@smith.com");
+    void shouldFindByUsername() {
+        AppUser expected = makeAppUser(1);
 
-        assertTrue(actual.isEnabled());
-        assertEquals(1, actual.getAuthorities().size());
-        assertTrue(actual.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN")));
+        AppUser actual = repository.findByUsername("appuser1@app.com");
+
+        assertEquals(expected, actual);
     }
 
     @Test
-    void shouldFindSallyJonesByEmail() {
-        AppUser actual = repository.findByEmail("sally@jones.com");
-
-        assertEquals(1, actual.getAuthorities().size());
-        assertTrue(actual.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("USER")));
+    void shouldNotFindMissing() {
+        AppUser actual = repository.findByUsername("appuser7@app.com");
+        assertNull(actual);
     }
 
     @Test
-    void shouldCreatePaiTongsukum() {
-        AppUser appUser = new AppUser(0, "paitongsukum", "strongPassPhrase", true, List.of("USER"));
+    void shouldAddAppUser() {
+        AppUser appUser = new AppUser(0, "test4@app.com", "hashed_pass_3", true, List.of("TEST_ROLE_1"));
+        AppUser expected = new AppUser(4, "test4@app.com", "hashed_pass_3", true, List.of("TEST_ROLE_1"));
 
-        AppUser actual = repository.create(appUser);
+        AppUser actual = repository.add(appUser);
 
-        assertEquals(4, actual.getAppUserId());
+        assertEquals(expected, actual);
 
-        AppUser pai = repository.findByEmail("paitongsukum");
-
-        assertTrue(pai.isEnabled());
-        assertEquals("paitongsukum", pai.getUsername());
-        assertEquals("strongPassPhrase", pai.getPassword());
-        assertEquals(1, pai.getAuthorities().size());
-        assertTrue(pai.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("USER")));
+        assertEquals(expected, repository.findByUsername("test4@app.com"));
     }
 
-    @Test
-    void shouldUpdateSallyJones() {
-        AppUser sally = repository.findByEmail("sally@jones.com");
-        sally.setEnabled(false);
-
-        assertTrue(repository.update(sally));
-
-        AppUser updatedSally = repository.findByEmail("sally@jones.com");
-        assertFalse(updatedSally.isEnabled());
+    public static AppUser makeAppUser(int id) {
+        return new AppUser(
+                id,
+                String.format("appuser%s@app.com", id),
+                String.format("password_hash_%s", id),
+                true,
+                List.of(String.format("TEST_ROLE_%s", id))
+        );
     }
 }

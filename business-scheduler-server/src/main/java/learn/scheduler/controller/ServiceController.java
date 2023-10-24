@@ -20,15 +20,6 @@ public class ServiceController {
         this.service = service;
     }
 
-    @GetMapping("/{businessId}")
-    public ResponseEntity<List<Service>> getServicesForBusiness(@PathVariable int businessId) {
-        List<Service> result = service.getServicesForBusiness(businessId);
-        if (result == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(result);
-    }
-
     @PostMapping
     public ResponseEntity<Service> addService(@RequestBody Service serviceToAdd) {
         Result<Service> result = service.addService(serviceToAdd);

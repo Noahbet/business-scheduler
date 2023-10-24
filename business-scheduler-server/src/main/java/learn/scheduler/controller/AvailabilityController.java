@@ -20,15 +20,6 @@ public class AvailabilityController {
         this.service = service;
     }
 
-    @GetMapping("/{businessId}")
-    public ResponseEntity<Availability> searchByBusinessId(@PathVariable int businessId) {
-        Availability availability = service.searchByBusinessId(businessId);
-        if (availability == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(availability);
-    }
-
     @PutMapping("/{businessId}")
     public ResponseEntity<Void> update(@PathVariable int businessId, @RequestBody Availability availability) {
         if (availability != null && availability.getBusinessId() != businessId) {

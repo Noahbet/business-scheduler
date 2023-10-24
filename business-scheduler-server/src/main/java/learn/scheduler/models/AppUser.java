@@ -7,43 +7,49 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 public class AppUser implements UserDetails {
-
-    private int appUserId;
-    private final String email;
-    private final String password;
+    private  int id;
+    private String username;
+    private String passwordHash;
     private boolean enabled;
-    private final Collection<GrantedAuthority> authorities;
 
-    public AppUser(int appUserId, String email, String password, boolean enabled, List<String> roles) {
-        this.appUserId = appUserId;
-        this.email = email;
-        this.password = password;
+    private List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+
+    public AppUser() {}
+
+    public AppUser(int id, String username, String passwordHash, boolean enabled, List<String> authorities) {
+        this.id = id;
+        this.username = username;
+        this.passwordHash = passwordHash;
         this.enabled = enabled;
-        this.authorities = convertRolesToAuthorities(roles);
+        this.authorities = authorities.stream()
+                .map(r -> new SimpleGrantedAuthority(r))
+                .toList();
     }
 
-    private static Collection<GrantedAuthority> convertRolesToAuthorities(List<String> roles) {
-        return roles.stream()
-                .map(r -> new SimpleGrantedAuthority(r))
-                .collect(Collectors.toList());
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override
-    public Collection<GrantedAuthority> getAuthorities() {
-        return new ArrayList<>(authorities);
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
     }
 
     @Override
     public String getPassword() {
-        return password;
+        return this.passwordHash;
     }
 
     @Override
     public String getUsername() {
-        return email;
+        return this.username;
     }
 
     @Override
@@ -63,18 +69,30 @@ public class AppUser implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return enabled;
+        return this.enabled;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AppUser appUser = (AppUser) o;
+        return id == appUser.id && enabled == appUser.enabled && Objects.equals(username, appUser.username) && Objects.equals(passwordHash, appUser.passwordHash) && Objects.equals(authorities, appUser.authorities);
     }
 
-    public int getAppUserId() {
-        return appUserId;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, passwordHash, enabled, authorities);
     }
 
-    public void setAppUserId(int appUserId) {
-        this.appUserId = appUserId;
+    @Override
+    public String toString() {
+        return "AppUser{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", passwordHash='" + passwordHash + '\'' +
+                ", enabled=" + enabled +
+                ", authorities=" + authorities +
+                '}';
     }
 }

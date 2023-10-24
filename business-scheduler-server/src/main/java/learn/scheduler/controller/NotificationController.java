@@ -23,7 +23,7 @@ public class NotificationController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<List<Notification>> searchBusinesses(@PathVariable int userId) {
+    public ResponseEntity<List<Notification>> searchByUserId(@PathVariable int userId) {
         List<Notification> notifications = service.searchByUserId(userId);
         if (notifications == null) {
             return ResponseEntity.notFound().build();

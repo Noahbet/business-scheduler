@@ -8,19 +8,21 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class AppUserMapper implements RowMapper<AppUser> {
-    private final List<String> roles;
 
-    public AppUserMapper(List<String> roles) {
-        this.roles = roles;
+    private final List<String> authorities;
+
+    public AppUserMapper(List<String> authorities) {
+        this.authorities = authorities;
     }
 
     @Override
-    public AppUser mapRow(ResultSet rs, int i) throws SQLException {
+    public AppUser mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new AppUser(
                 rs.getInt("app_user_id"),
-                rs.getString("email"),
+                rs.getString("username"),
                 rs.getString("password_hash"),
                 rs.getBoolean("enabled"),
-                roles);
+                authorities
+        );
     }
 }

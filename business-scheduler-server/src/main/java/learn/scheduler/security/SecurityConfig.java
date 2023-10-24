@@ -25,12 +25,11 @@ public class SecurityConfig {
         http.cors();
 
         http.authorizeRequests()
-                // new...
-                .antMatchers("/authenticate").permitAll()
+                .antMatchers("/login").permitAll()
                 .antMatchers("/refresh_token").authenticated()
-                .antMatchers("/create_account").permitAll()
+                .antMatchers("/register").permitAll()
                 .antMatchers(HttpMethod.GET,
-                        "/business/*", "/service", "/availability", "/notification", "/appointment").permitAll()
+                        "/business/*", "/notification", "/appointment").permitAll()
                 .antMatchers(HttpMethod.GET,
                         "/notification").hasAnyAuthority("USER", "OWNER", "ADMIN")
                 .antMatchers(HttpMethod.POST,

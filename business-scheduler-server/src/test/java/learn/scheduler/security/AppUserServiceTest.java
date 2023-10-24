@@ -1,14 +1,16 @@
 package learn.scheduler.security;
 
+
 import learn.scheduler.data.AppUserRepository;
+import learn.scheduler.domain.ActionStatus;
 import learn.scheduler.domain.Result;
 import learn.scheduler.models.AppUser;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.dao.DuplicateKeyException;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
@@ -22,128 +24,123 @@ class AppUserServiceTest {
     @MockBean
     AppUserRepository repository;
 
+    @MockBean
+    PasswordEncoder passwordEncoder;
+
     @Autowired
     AppUserService service;
 
     @Test
-    void shouldLoadUserByUsername() {
-        AppUser expected = new AppUser(1, "john@smith.com", "Hashed-P@ssw0rd!", true, List.of("ADMIN"));
-
-        when(repository.findByEmail("john@smith.com")).thenReturn(expected);
-
-        UserDetails actual = service.loadUserByUsername("john@smith.com");
-
-        assertEquals("john@smith.com", actual.getUsername());
-        assertEquals("Hashed-P@ssw0rd!", actual.getPassword());
-        assertEquals(1, actual.getAuthorities().size());
-        assertTrue(actual.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN")));
-        assertTrue(actual.isEnabled());
+    void shouldThrowUsernameNotFoundExceptionForMissingUser() {
+        assertThrows(UsernameNotFoundException.class, () -> {
+            service.loadUserByUsername("missing_username");
+        });
     }
 
     @Test
-    void shouldCreateValidAppUser() {
-        String username = "pai@tongsukum.com";
-        String password = "Val1dP@ssw0rd!";
+    void shouldAddValidUser() {
+        AppUser expected = new AppUser(5, "test1@test.com", "hashed_password", true, List.of("USER"));
 
-        AppUser expected = new AppUser(5, "pai@tongsukum.com", "HashedPassword", true, List.of("USER"));
+        when(passwordEncoder.encode(any())).thenReturn("hashed_password");
+        when(repository.add(any())).thenReturn(expected);
 
-        when(repository.create(any())).thenReturn(expected);
+        Result<AppUser> actual = service.add("test1@test.com", "P@ssw0rd!");
 
-        Result<AppUser> result = service.create(username, password);
-
-        assertTrue(result.isSuccess());
-        assertEquals(5, result.getPayload().getAppUserId());
-        assertEquals("pai@tongsukum.com", result.getPayload().getUsername());
-        assertEquals("HashedPassword", result.getPayload().getPassword());
-        assertEquals(1, result.getPayload().getAuthorities().size());
-        assertTrue(expected.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("USER")));
+        assertTrue(actual.isSuccess());
+        assertEquals(expected, actual.getPayload());
     }
 
     @Test
-    void shouldNotCreateWithNullUsername() {
-        Result<AppUser> result = service.create(null, "Val1dP@ssw0rd!");
+    void shouldNotAddNullUsername() {
+        Result<AppUser> expected = makeResult("username is required", null);
 
-        assertFalse(result.isSuccess());
-        assertNull(result.getPayload());
-        assertEquals(1, result.getMessages().size());
-        assertEquals("username is required", result.getMessages().get(0));
+        Result<AppUser> actual = service.add(null, "P@ssw0rd!");
+
+        assertEquals(expected.getMessages(), actual.getMessages());
     }
 
     @Test
-    void shouldNotCreateWithBlankUsername() {
-        Result<AppUser> result = service.create("", "Val1dP@ssw0rd!");
+    void shouldNotAddBlankUsername() {
+        Result<AppUser> expected = makeResult("username is required", null);
 
-        assertFalse(result.isSuccess());
-        assertNull(result.getPayload());
-        assertEquals(1, result.getMessages().size());
-        assertEquals("username is required", result.getMessages().get(0));
+        Result<AppUser> actual = service.add("", "P@ssw0rd!");
+
+        assertEquals(expected.getMessages(), actual.getMessages());
     }
 
     @Test
-    void shouldNotCreateWithUsernameGreaterThan50Chars() {
-        Result<AppUser> result = service.create("a".repeat(51), "Val1dP@ssw0rd!");
+    void shouldNotAddNullPassword() {
+        Result<AppUser> expected = makeResult("password is required", null);
 
-        assertFalse(result.isSuccess());
-        assertNull(result.getPayload());
-        assertEquals(1, result.getMessages().size());
-        assertEquals("username must be less than 50 characters", result.getMessages().get(0));
+        Result<AppUser> actual = service.add("username@example.com", null);
+
+        assertEquals(expected.getMessages(), actual.getMessages());
     }
 
     @Test
-    void shouldNotCreateAppUserWithExistingUsername() {
-        String username = "pai@tongsukum.com";
-        String password = "Val1dP@ssw0rd!";
+    void shouldNotAddBlankPassword() {
+        Result<AppUser> expected = makeResult("password is required", null);
 
-        when(repository.create(any())).thenThrow(DuplicateKeyException.class);
+        Result<AppUser> actual = service.add("username@example.com", "");
 
-        Result<AppUser> result = service.create(username, password);
-
-        assertFalse(result.isSuccess());
-        assertNull(result.getPayload());
-        assertEquals(1, result.getMessages().size());
-        assertEquals("The provided username already exists", result.getMessages().get(0));
+        assertEquals(expected.getMessages(), actual.getMessages());
     }
 
     @Test
-    void shouldNotCreateWithNullPassword() {
-        Result<AppUser> result = service.create("valid@username.com", null);
+    void shouldNotAddTooShortPassword() {
+        Result<AppUser> expected = makeResult("password must be at least 8 character and contain a digit, a letter, and a non-digit/non-letter", null);
 
-        assertFalse(result.isSuccess());
-        assertNull(result.getPayload());
-        assertEquals(1, result.getMessages().size());
-        assertEquals("password is required", result.getMessages().get(0));
+        Result<AppUser> actual = service.add("username@example.com", "P@ssw0r");
+
+        assertEquals(expected.getMessages(), actual.getMessages());
     }
 
     @Test
-    void shouldNotCreateWithLessThan8Chars() {
-        Result<AppUser> result = service.create("valid@username.com", "invalid");
+    void shouldNotAddPasswordWithNoDigit() {
+        Result<AppUser> expected = makeResult("password must be at least 8 character and contain a digit, a letter, and a non-digit/non-letter", null);
 
-        assertFalse(result.isSuccess());
-        assertNull(result.getPayload());
-        assertEquals(1, result.getMessages().size());
-        assertEquals("password must be at least 8 character and contain a digit, a letter, and a non-digit/non-letter",
-                result.getMessages().get(0));
+        Result<AppUser> actual = service.add("username@example.com", "P@ssword");
+
+        assertEquals(expected.getMessages(), actual.getMessages());
     }
 
     @Test
-    void shouldNotCreateWithoutNumberInPassword() {
-        Result<AppUser> result = service.create("valid@username.com", "invalidp@ssword!");
+    void shouldNotAddPasswordWithNoSpecialCharacter() {
+        Result<AppUser> expected = makeResult("password must be at least 8 character and contain a digit, a letter, and a non-digit/non-letter", null);
 
-        assertFalse(result.isSuccess());
-        assertNull(result.getPayload());
-        assertEquals(1, result.getMessages().size());
-        assertEquals("password must be at least 8 character and contain a digit, a letter, and a non-digit/non-letter",
-                result.getMessages().get(0));
+        Result<AppUser> actual = service.add("username@example.com", "Passw0rd");
+
+        assertEquals(expected.getMessages(), actual.getMessages());
     }
 
     @Test
-    void shouldNotCreateWithoutSpecialCharInPassword() {
-        Result<AppUser> result = service.create("valid@username.com", "invalidp4ssword");
+    void shouldNotAddPasswordWithNoLetters() {
+        Result<AppUser> expected = makeResult("password must be at least 8 character and contain a digit, a letter, and a non-digit/non-letter", null);
 
-        assertFalse(result.isSuccess());
-        assertNull(result.getPayload());
-        assertEquals(1, result.getMessages().size());
-        assertEquals("password must be at least 8 character and contain a digit, a letter, and a non-digit/non-letter",
-                result.getMessages().get(0));
+        Result<AppUser> actual = service.add("username@example.com", "9455702@");
+
+        assertEquals(expected.getMessages(), actual.getMessages());
+    }
+
+    @Test
+    void shouldNotAddDuplicateUsername() {
+        AppUser existing = new AppUser(5, "existing@test.com", "password", true, List.of("USER"));
+
+        when(repository.findByUsername("existing@test.com")).thenReturn(existing);
+
+        Result<AppUser> expected = makeResult("the provided username already exists", null);
+
+        Result<AppUser> actual = service.add("existing@test.com", "P@ssw0rd!");
+
+        assertEquals(expected.getMessages(), actual.getMessages());
+    }
+
+    public static <T> Result<T> makeResult(String message, T payload) {
+        Result<T> result = new Result<>();
+        if (message != null) {
+            result.addMessage(ActionStatus.INVALID, message);
+        }
+        result.setPayload(payload);
+        return result;
     }
 }

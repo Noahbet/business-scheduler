@@ -19,7 +19,6 @@ public class AppointmentService {
     private final BusinessRepository businessRepository;
     private final ServiceRepository serviceRepository;
     private final AvailabilityRepository availabilityRepository;
-
     private final Validator validator;
 
     public AppointmentService(AppointmentRepository appointmentRepository, BusinessRepository businessRepository,

@@ -3,14 +3,11 @@ package learn.scheduler.data;
 import learn.scheduler.data.mappers.AppUserMapper;
 import learn.scheduler.models.AppUser;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 @Repository
@@ -24,86 +21,63 @@ public class AppUserJdbcTemplateRepository implements AppUserRepository {
 
     @Override
     @Transactional
-    public AppUser findByEmail(String email) {
+    public AppUser findByUsername(String username) {
 
-        List<String> roles = getRolesByEmail(email);
-
-        final String sql = "select app_user_id, email, password_hash, enabled "
-                + "from app_user "
-                + "where email = ?;";
-
-        return jdbcTemplate.query(sql, new AppUserMapper(roles), email)
-                .stream()
+        String sql = """
+                select 
+                     u.app_user_id,
+                     u.username,
+                     u.password_hash,
+                     u.enabled
+                from app_user u
+                where u.username = ?;
+                """;
+        return jdbcTemplate.query(sql, new AppUserMapper(getAuthorities(username)), username).stream()
                 .findFirst().orElse(null);
     }
 
     @Override
     @Transactional
-    public AppUser create(AppUser user) {
+    public AppUser add(AppUser appUser) {
 
-        final String sql = "insert into app_user (email, password_hash) values (?, ?);";
+        SimpleJdbcInsert insert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("app_user")
+                .usingColumns("username", "password_hash", "enabled")
+                .usingGeneratedKeyColumns("app_user_id");
 
-        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-        int rowsAffected = jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, user.getUsername());
-            ps.setString(2, user.getPassword());
-            return ps;
-        }, keyHolder);
+        HashMap<String, Object> args = new HashMap<>();
+        args.put("username", appUser.getUsername());
+        args.put("password_hash", appUser.getPassword());
+        args.put("enabled", appUser.isEnabled());
 
-        if (rowsAffected <= 0) {
-            return null;
-        }
+        int id = insert.executeAndReturnKey(args).intValue();
+        appUser.setId(id);
 
-        user.setAppUserId(keyHolder.getKey().intValue());
+        updateRoles(appUser);
 
-        updateRoles(user);
-
-        return user;
+        return appUser;
     }
 
-    @Override
-    @Transactional
-    public boolean update(AppUser user) {
-
-        final String sql = "update app_user set "
-                + "email = ?, "
-                + "enabled = ? "
-                + "where app_user_id = ?";
-
-        boolean updated = jdbcTemplate.update(sql,
-                user.getUsername(), user.isEnabled(), user.getAppUserId()) > 0;
-
-        if (updated) {
-            updateRoles(user);
-        }
-
-        return updated;
-    }
-
-    private void updateRoles(AppUser user) {
-        // delete all roles, then re-add
-        jdbcTemplate.update("delete from app_user_role where app_user_id = ?;", user.getAppUserId());
-
-        Collection<GrantedAuthority> authorities = user.getAuthorities();
-
-        if (authorities == null) {
-            return;
-        }
-
-        for (GrantedAuthority role : authorities) {
-            String sql = "insert into app_user_role (app_user_id, app_role_id) "
-                    + "select ?, app_role_id from app_role where `name` = ?;";
-            jdbcTemplate.update(sql, user.getAppUserId(), role.getAuthority());
+    private void updateRoles(AppUser appUser) {
+        jdbcTemplate.update("delete from app_user_role where app_user_id = ?;", appUser.getId());
+        for (var authority : appUser.getAuthorities()) {
+            String sql = """
+                    insert into app_user_role (app_user_id, app_role_id)
+                    values (?, (select app_role_id from app_role where `name` = ?));
+                    """;
+            jdbcTemplate.update(sql, appUser.getId(), authority.getAuthority());
         }
     }
 
-    private List<String> getRolesByEmail(String email) {
-        final String sql = "select r.name "
-                + "from app_user_role ur "
-                + "inner join app_role r on ur.app_role_id = r.app_role_id "
-                + "inner join app_user au on ur.app_user_id = au.app_user_id "
-                + "where au.email = ?";
-        return jdbcTemplate.query(sql, (rs, rowId) -> rs.getString("name"), email);
+    private List<String> getAuthorities(String username) {
+        final String sql = """
+                select 
+                    r.name
+                from app_role r
+                inner join app_user_role ur on ur.app_role_id = r.app_role_id
+                inner join app_user u on u.app_user_id = ur.app_user_id
+                where u.username = ?;
+                """;
+        return jdbcTemplate.query(sql, (rs, i) -> rs.getString("name"), username);
     }
 }

@@ -1,12 +1,7 @@
 package learn.scheduler.controller;
 
-import learn.scheduler.domain.AvailabilityService;
-import learn.scheduler.domain.BusinessService;
-import learn.scheduler.domain.Result;
-import learn.scheduler.models.Availability;
-import learn.scheduler.models.Business;
-import learn.scheduler.models.Category;
-import learn.scheduler.models.Service;
+import learn.scheduler.domain.*;
+import learn.scheduler.models.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,12 +14,16 @@ import java.util.List;
 public class BusinessController {
 
     private final BusinessService service;
-
     private final AvailabilityService availabilityService;
+    private final AppointmentService appointmentService;
+    private final ServiceService serviceService;
 
-    public BusinessController(BusinessService service, AvailabilityService availabilityService) {
+    public BusinessController(BusinessService service, AvailabilityService availabilityService,
+                              AppointmentService appointmentService, ServiceService serviceService) {
         this.service = service;
         this.availabilityService = availabilityService;
+        this.appointmentService = appointmentService;
+        this.serviceService = serviceService;
     }
 
     @GetMapping("/query/{query}")
@@ -33,6 +32,13 @@ public class BusinessController {
         if (businesses == null) {
             return ResponseEntity.notFound().build();
         }
+
+        for (Business business: businesses) {
+            business.setAppointments(appointmentService.searchByBusinessId(business.getBusinessId()));
+            business.setAvailability(availabilityService.searchByBusinessId(business.getBusinessId()));
+            business.setServices(serviceService.getServicesForBusiness(business.getBusinessId()));
+        }
+
         return ResponseEntity.ok(businesses);
     }
 
@@ -42,6 +48,13 @@ public class BusinessController {
         if (businesses == null) {
             return ResponseEntity.notFound().build();
         }
+
+        for (Business business: businesses) {
+            business.setAppointments(appointmentService.searchByBusinessId(business.getBusinessId()));
+            business.setAvailability(availabilityService.searchByBusinessId(business.getBusinessId()));
+            business.setServices(serviceService.getServicesForBusiness(business.getBusinessId()));
+        }
+
         return ResponseEntity.ok(businesses);
     }
 
@@ -49,8 +62,14 @@ public class BusinessController {
     public ResponseEntity<Business> addBusiness(@RequestBody Business business) {
         Result<Business> result = service.addBusiness(business);
         business.getAvailability().setBusinessId(result.getPayload().getBusinessId());
+
         Result<Availability> serviceResult = availabilityService.addAvailability(business.getAvailability());
         result.addMessage(serviceResult.getStatus(), serviceResult.getMessages().get(0));
+        if (!result.isSuccess()) {
+            service.deleteBusiness(business.getBusinessId());
+            return new ResponseEntity<>(result.getPayload(), getStatus(result, HttpStatus.CONFLICT));
+        }
+
         return new ResponseEntity<>(result.getPayload(), getStatus(result, HttpStatus.CREATED));
     }
 

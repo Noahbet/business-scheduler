@@ -20,18 +20,9 @@ public class AppointmentController {
         this.service = service;
     }
 
-    @GetMapping("/userId/{userId}")
+    @GetMapping("/{userId}")
     public ResponseEntity<List<Appointment>> searchByUserId(@PathVariable int userId) {
         List<Appointment> appointment = service.searchByUserId(userId);
-        if (appointment == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(appointment);
-    }
-
-    @GetMapping("/businessId/{businessId}")
-    public ResponseEntity<List<Appointment>> searchByBusinessId(@PathVariable int businessId) {
-        List<Appointment> appointment = service.searchByBusinessId(businessId);
         if (appointment == null) {
             return ResponseEntity.notFound().build();
         }
