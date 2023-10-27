@@ -11,7 +11,7 @@ function SearchBar({ onSearch } : {onSearch:Function}) {
     <div className="search-bar">
       <input
         type="text"
-        placeholder="Search plez..."
+        placeholder="Search..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         className='rounded border border-maroon-200 m-4 p-2'

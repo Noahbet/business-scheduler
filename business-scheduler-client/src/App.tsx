@@ -5,7 +5,7 @@ import "./App.css";
 import Home from "./components/home_components/Home";
 import Profile from "./components/profile_components/Profile";
 import BusinessPage from "./components/business_page_components/BusinessPage";
-// import ServiceForm from "./components/ServiceForm";
+import ServiceForm from "./components/ServiceForm";
 import Error from "./components/Error";
 import NavBar from "./components/NavBar";
 import LoginForm from "./components/LoginForm";
@@ -88,10 +88,10 @@ function App() {
               path="/appointment/add/:serviceId"
               element={renderWithAuthority(AppointmentForm, "USER")}
             />
-            {/* <Route
-              path="/service/add"
-              element={renderWithAuthority(ServiceForm, "OWNER", "ADMIN")}
-            /> */}
+            <Route
+              path="/service/add/:businessId"
+              element={renderWithAuthority(ServiceForm, "OWNER")}
+            />
             <Route path="/error" element={<Error />} />
             <Route path="*" element={<Error />} />
           </Routes>

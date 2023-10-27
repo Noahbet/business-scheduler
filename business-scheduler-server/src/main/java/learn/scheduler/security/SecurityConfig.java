@@ -36,7 +36,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.POST,
                         "/business", "/appointment", "/notification").hasAnyAuthority("USER")
                 .antMatchers(HttpMethod.POST,
-                        "/service").hasAnyAuthority("OWNER", "ADMIN")
+                        "/service").hasAnyAuthority("OWNER")
                 .antMatchers(HttpMethod.PUT,
                         "/business/*", "/service/*", "/availability/*").hasAnyAuthority("OWNER", "ADMIN")
                 .antMatchers(HttpMethod.DELETE,

@@ -44,7 +44,8 @@ export async function saveService(service: any) {
     init.method = "POST";
     const response = await fetch(url, init);
     if (response.status === 201) {
-      return response.json();
+      console.log(response)
+      return await response.json();
     } else if (response.status === 400) {
       const result = await response.json();
       return { errors: result.messages };

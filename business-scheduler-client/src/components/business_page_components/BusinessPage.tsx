@@ -7,19 +7,8 @@ import BusinessPicture from "../BusinessPicture";
 import ServicesList from "../ServicesList";
 import BusinessHours from "./BusinessHours";
 
-const INITIAL_BUSINESS = {
-    businessId: 0,
-    businessName: "",
-    availability: 1,
-    ownerId: 4,
-    category: "",
-    rating: 0.0,
-    services: [],
-    appointments: false,
-  };
-
 function BusinessPage() {
-    const [business, setBusiness] = useState({businessId: 0, businessName: "", availability: {mondayStart: '00:00:00', mondayEnd: '00:00:00', mondayBreakStart: '00:00:00', mondayBreakEnd: '00:00:00', 
+    const [business, setBusiness] = useState({businessId: 0, ownerId: 0, businessName: "", availability: {mondayStart: '00:00:00', mondayEnd: '00:00:00', mondayBreakStart: '00:00:00', mondayBreakEnd: '00:00:00', 
     tuesdayStart: '00:00:00', tuesdayEnd: '00:00:00', tuesdayBreakStart: '00:00:00', tuesdayBreakEnd: '00:00:00', 
     wednesdayStart: '00:00:00', wednesdayEnd: '00:00:00', wednesdayBreakStart: '00:00:00', wednesdayBreakEnd: '00:00:00', 
     thursdayStart: '00:00:00', thursdayEnd: '00:00:00', thursdayBreakStart: '00:00:00', thursdayBreakEnd: '00:00:00', 
@@ -58,6 +47,13 @@ function BusinessPage() {
           </p>
       </div> 
       <ServicesList services={business.services}></ServicesList>
+      {auth?.hasAuthority("OWNER") && auth?.user.userId == business.ownerId ?
+        <>
+            <Link to={'/service/add/' + businessId} className="border border-gray-500 bg-maroon-200 hover:bg-maroon-100 p-2 m-2 rounded text-white">Add Service</Link>
+        </>
+        :
+        <></>
+      }
     </div>
   );
 }
