@@ -35,7 +35,7 @@ function AppointmentCard({ appointment } : {appointment:any}) {
       <div className="w-3/4 border border-maroon-200 bg-gray-300 flex flex-column items-center justify-between mx-auto p-5 m-4 rounded">
         <div className="flex flex-wrap items-center justify-between">
             <p className="text-maroon-200 font-bold text-l m-5">
-              {auth?.user.userId === business.ownerId ?
+              {auth?.hasAuthority("OWNER") && auth?.user.userId == business.ownerId ?
               appointment.customerUser : business.businessName}
             </p>
             <p className="text-maroon-200 font-bold text-l m-5">

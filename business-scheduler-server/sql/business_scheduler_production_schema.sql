@@ -48,8 +48,8 @@ create table business (
 create table rating (
 	app_user_id int not null,
     business_id int not null,
-    rating_value int not null,
-    constraint max_value_constraint check (rating_value <= 5),
+    rating_value double not null,
+    constraint max_value_constraint check (rating_value <= 5.0),
 	constraint fk_rating_app_user_id
         foreign key (app_user_id)
         references app_user(app_user_id),
@@ -58,7 +58,8 @@ create table rating (
         references business(business_id)
 );
 
-create table business_hours (
+create table availability (
+	availability_id int primary key auto_increment,
     business_id int not null,
     monday_start time,
     monday_end time,
@@ -88,7 +89,7 @@ create table business_hours (
     sunday_end time,
     sunday_break_start time,
     sunday_break_end time,
-    constraint fk_business_hours_business_id
+    constraint fk_availability_business_id
         foreign key (business_id)
         references business(business_id)
 );
@@ -97,9 +98,7 @@ create table service (
 	service_id int primary key auto_increment,
     service_name varchar(100) not null,
     business_id int not null,
-    service_length int not null,
-    downtime int,
-    total_service_length int as (service_length + downtime),
+    total_service_length int not null,
     cost decimal(10, 2) not null,
     constraint fk_business_business_id
         foreign key (business_id)
@@ -124,14 +123,15 @@ create table appointment (
 );
 
 create table notification (
+	notification_id int primary key auto_increment,
 	sender_id int not null,
-    reciever_id int not null,
+    receiver_id int not null,
     message varchar(250) not null,
     constraint fk_notification_sender_id
         foreign key (sender_id)
         references app_user(app_user_id),
-	constraint fk_notification_reciever_id
-        foreign key (reciever_id)
+	constraint fk_notification_receiver_id
+        foreign key (receiver_id)
         references app_user(app_user_id)
 );
 
@@ -139,3 +139,13 @@ insert into app_role (`name`) values
     ('USER'),
     ('OWNER'),
     ('ADMIN');
+    
+insert into business_category (category) values
+    ('HEALTH'),
+    ('HAIR'),
+    ('TATTOO'),
+    ('PET'),
+    ('CLEANING'),
+    ('FOOD');
+    
+    

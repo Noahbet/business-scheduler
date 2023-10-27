@@ -4,7 +4,7 @@ use business_scheduler_test;
 
 create table app_user (
     app_user_id int primary key auto_increment,
-    email varchar(50) not null unique,
+    username varchar(50) not null unique,
     password_hash varchar(2048) not null,
     enabled bit not null default(1)
 );
@@ -161,20 +161,22 @@ begin
     delete from app_user;
 	alter table app_user auto_increment = 1;
 
-insert into app_user (email, password_hash, enabled) values
-    ('john@smith.com', '$2a$10$ntB7CsRKQzuLoKY3rfoAQen5nNyiC/U60wBsWnnYrtQQi8Z3IZzQa', 1),
-    ('sally@jones.com', '$2a$10$ntB7CsRKQzuLoKY3rfoAQen5nNyiC/U60wBsWnnYrtQQi8Z3IZzQa', 1),
-    ('user3', 'hash3', 1);
+insert into app_role (`name`) values
+		('TEST_ROLE_1'),
+		('TEST_ROLE_2');
 
-insert into app_role (name) values
-    ('USER'),
-    ('ADMIN'),
-    ('OWNER');
+	-- passwords are set to "P@ssw0rd!"
+	insert into app_user (username, password_hash, enabled)
+		values
+		('appuser1@app.com', 'password_hash_1', 1),
+		('appuser2@app.com', 'password_hash_2', 1),
+		('appuser3@app.com', 'password_hash_3', 1);
 
-insert into app_user_role (app_user_id, app_role_id) values
-    (1, 2),
-    (2, 1),
-    (3, 3);
+
+	insert into app_user_role
+		values
+		(1, 1),
+		(2, 2);
     
 insert into notification (sender_id, receiver_id, message) values
     (1, 2, 'Sorry, I sick'),
@@ -182,9 +184,9 @@ insert into notification (sender_id, receiver_id, message) values
     (3, 2, "I don't like you");
 
 insert into business_category (category) values
-    ('RETAIL'),
-    ('RESTAURANT'),
-    ('SERVICE');
+    ('HEALTH'),
+    ('HAIR'),
+    ('TATTOO');
 
 insert into business (business_name, owner_id, category_id) values
     ('Business 1', 1, 1),

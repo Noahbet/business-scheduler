@@ -53,15 +53,13 @@ function Profile() {
       }, [navigate, auth?.user.userId]);
 
     return (
-        <div className="w-screen h-screen bg-gray-400 flex flex-col">
+        <div className="w-screen h-200% bg-gray-400 flex flex-col">
             <div className="flex flex-col w-screen m-2">
-                {!auth?.hasAuthority("OWNER") && (
                     <div className="w-screen flex flex-col items-center p-1">
                         <Link to="/business/add" className="bg-gray-500 border border-gray-600 rounded p-2 m-2">
                             Add Business
                         </Link>
                     </div>
-                )}
             </div>
             <h2 className="font-bold text-bold m-7 mx-20">Appointments by you</h2>
             <div className="flex flex-wrap items-center">

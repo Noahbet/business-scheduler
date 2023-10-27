@@ -47,7 +47,7 @@ function BusinessPage() {
           </p>
       </div> 
       <ServicesList services={business.services}></ServicesList>
-      {auth?.hasAuthority("OWNER") && auth?.user.userId == business.ownerId ?
+      {auth?.user.userId == business.ownerId ?
         <>
             <Link to={'/service/add/' + businessId} className="border border-gray-500 bg-maroon-200 hover:bg-maroon-100 p-2 m-2 rounded text-white">Add Service</Link>
         </>

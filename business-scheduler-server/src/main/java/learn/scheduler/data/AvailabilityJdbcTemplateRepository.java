@@ -92,7 +92,7 @@ public class AvailabilityJdbcTemplateRepository implements AvailabilityRepositor
             return null;
         }
 
-        availability.setAvailabilityId(keyHolder.getKey().intValue());
+        availability.setAvailabilityId(Objects.requireNonNull(keyHolder.getKey()).intValue());
 
         return availability;
     }

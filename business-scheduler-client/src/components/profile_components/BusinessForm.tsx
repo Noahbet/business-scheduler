@@ -74,7 +74,7 @@ function BusinessForm() {
   };
 
   return (
-    <div className="min-w-screen min-h-screen bg-gray-400">
+    <div className="w-screen min-h-screen bg-gray-400">
       <ValidationSummary errors={errors} />
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col items-center">

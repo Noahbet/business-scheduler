@@ -90,7 +90,7 @@ function App() {
             />
             <Route
               path="/service/add/:businessId"
-              element={renderWithAuthority(ServiceForm, "OWNER")}
+              element={renderWithAuthority(ServiceForm, "USER")}
             />
             <Route path="/error" element={<Error />} />
             <Route path="*" element={<Error />} />

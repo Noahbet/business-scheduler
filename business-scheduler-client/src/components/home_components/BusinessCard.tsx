@@ -21,7 +21,7 @@ function BusinessCard({ business } : {business:any}) {
           <p className="text-maroon-200">
             {business.category}
           </p>
-          <Rating rating={business.rating}></Rating>
+          {/* <Rating rating={business.rating}></Rating> */}
         </div>
         <div className="flex flex-wrap items-center">
           <ServicesList services={business.services}></ServicesList>

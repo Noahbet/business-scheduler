@@ -75,6 +75,7 @@ VALUES
 INSERT INTO app_user_role (app_user_id, app_role_id)
 VALUES
 	(1, 1),
+	(1, 2),
 	(2, 1),
     (3, 1),
 	(4, 1),
