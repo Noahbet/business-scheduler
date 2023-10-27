@@ -15,7 +15,7 @@ export async function login(credentials: object) {
   if (response.status === 200) {
     const jwtTokenResponse = await response.json();
     localStorage.setItem('jwt_token', jwtTokenResponse.jwt_token);
-    return makeUserFromJwt(jwtTokenResponse.jwt_token);
+    return makeUserFromJwt(jwtTokenResponse.jwt_token, jwtTokenResponse.userId);
   } else {
     return Promise.reject('Unauthorized.');
   }
@@ -33,7 +33,7 @@ export async function register(credentials: object) {
 
   const response = await fetch(url + '/register', init);
   if (response.status === 400) {
-    const result: any = response.json();
+    const result: any = await response.json();
     return { errors: result.messages };
   } else if (response.status !== 201) {
     return Promise.reject("Unexpected error, oops.");
@@ -59,7 +59,7 @@ export async function refreshToken() {
   if (response.status === 200) {
     const jwtTokenResponse = await response.json();
     localStorage.setItem('jwt_token', jwtTokenResponse.jwt_token);
-    return makeUserFromJwt(jwtTokenResponse.jwt_token);
+    return makeUserFromJwt(jwtTokenResponse.jwt_token, jwtTokenResponse.userId);
   } else {
     localStorage.removeItem('jwt_token');
     return Promise.reject('Unauthorized.');
@@ -70,12 +70,13 @@ export function logout() {
   localStorage.removeItem('jwt_token');
 }
 
-function makeUserFromJwt(jwtToken: string) {
+function makeUserFromJwt(jwtToken: string, userId: number) {
   const jwtParts = jwtToken.split('.');
   if (jwtParts.length === 3) {
     const userData = atob(jwtParts[1]);
     const decodedToken = JSON.parse(userData);
     return {
+      userId: userId,
       username: decodedToken.sub,
       authorities: decodedToken.authorities
     };

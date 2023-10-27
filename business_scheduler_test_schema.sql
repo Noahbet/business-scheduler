@@ -184,9 +184,9 @@ insert into notification (sender_id, receiver_id, message) values
     (3, 2, "I don't like you");
 
 insert into business_category (category) values
-    ('RETAIL'),
-    ('RESTAURANT'),
-    ('SERVICE');
+    ('HEALTH'),
+    ('HAIR'),
+    ('TATTOO');
 
 insert into business (business_name, owner_id, category_id) values
     ('Business 1', 1, 1),

@@ -2,6 +2,7 @@ package learn.scheduler.controller;
 
 import learn.scheduler.domain.Result;
 import learn.scheduler.domain.ServiceService;
+import learn.scheduler.models.Business;
 import learn.scheduler.models.Service;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,16 @@ public class ServiceController {
 
     public ServiceController(ServiceService service) {
         this.service = service;
+    }
+
+    @GetMapping("/{serviceId}")
+    public ResponseEntity<Service> searchById(@PathVariable int serviceId) {
+        Service serviceResult = service.getServiceById(serviceId);
+
+        if (serviceResult == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(serviceResult);
     }
 
     @PostMapping

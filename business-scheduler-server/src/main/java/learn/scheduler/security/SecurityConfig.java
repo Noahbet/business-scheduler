@@ -25,23 +25,24 @@ public class SecurityConfig {
         http.cors();
 
         http.authorizeRequests()
-                .antMatchers("/login").permitAll()
+                .antMatchers("/login", "/refresh_token").permitAll()
                 .antMatchers("/refresh_token").authenticated()
                 .antMatchers("/register").permitAll()
                 .antMatchers(HttpMethod.GET,
-                        "/business/*", "/notification", "/appointment").permitAll()
+                        "/business/*", "/service/*", "/business/query/*", "/business/category/*",
+                        "/notification/*", "/appointment/*", "/appointment/business/*").permitAll()
                 .antMatchers(HttpMethod.GET,
                         "/notification").hasAnyAuthority("USER", "OWNER", "ADMIN")
                 .antMatchers(HttpMethod.POST,
-                        "/appointment", "/notification").hasAnyAuthority("USER", "OWNER", "ADMIN")
+                        "/business", "/appointment", "/notification").hasAnyAuthority("USER")
                 .antMatchers(HttpMethod.POST,
-                        "/business", "/service", "/availability").hasAnyAuthority("OWNER", "ADMIN")
+                        "/service").hasAnyAuthority("OWNER", "ADMIN")
                 .antMatchers(HttpMethod.PUT,
-                        "/business", "/service", "/availability").hasAnyAuthority("OWNER", "ADMIN")
+                        "/business/*", "/service/*", "/availability/*").hasAnyAuthority("OWNER", "ADMIN")
                 .antMatchers(HttpMethod.DELETE,
-                        "/notification", "/appointment").hasAnyAuthority("USER", "OWNER", "ADMIN")
+                        "/notification/*", "/appointment/*").hasAnyAuthority("USER", "OWNER", "ADMIN")
                 .antMatchers(HttpMethod.DELETE,
-                        "/business", "/service", "/availability", "/notification", "/appointment").hasAnyAuthority("OWNER", "ADMIN")
+                        "/business/*", "/service/*", "/availability/*", "/notification/*", "/appointment/*").hasAnyAuthority("OWNER", "ADMIN")
                 .antMatchers("/**").denyAll()
                 .and()
                 .addFilter(new JwtRequestFilter(authenticationManager(authConfig), converter))

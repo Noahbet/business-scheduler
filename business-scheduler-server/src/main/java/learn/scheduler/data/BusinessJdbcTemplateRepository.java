@@ -110,7 +110,7 @@ public class BusinessJdbcTemplateRepository implements BusinessRepository{
             return false;
         }
 
-        jdbcTemplate.update("delete from app_user_role where app_user_id = ? and app_role_id = 3;", business.getOwnerId());
+        jdbcTemplate.update("delete from app_user_role where app_user_id = ? and app_role_id = 2;", business.getOwnerId());
         jdbcTemplate.update("delete from availability where business_id = ?;", businessId);
         jdbcTemplate.update("delete from appointment where business_id = ?;", businessId);
         jdbcTemplate.update("delete from rating where business_id = ?;", businessId);

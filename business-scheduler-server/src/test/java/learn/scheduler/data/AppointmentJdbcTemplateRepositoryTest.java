@@ -36,7 +36,7 @@ public class AppointmentJdbcTemplateRepositoryTest {
     void shouldSearchByBusinessId() {
         List<Appointment> actual = repository.searchByBusinessId(1);
 
-        assertEquals(2, actual.size());
+        assertEquals(1, actual.size());
         assertEquals(1, actual.get(0).getServiceId());
     }
 

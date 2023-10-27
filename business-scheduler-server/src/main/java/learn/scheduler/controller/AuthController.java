@@ -40,12 +40,12 @@ public class AuthController {
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                 credentials.get("username"), credentials.get("password"));
 
-        // Moved AuthenticationException handling to the GlobalErrHandler
         Authentication authentication = authenticationManager.authenticate(authToken);
         if (authentication.isAuthenticated()) {
             AppUser appUser = (AppUser) authentication.getPrincipal();
             String jwt = jwtConverter.getTokenFromUser(appUser);
             Map<String, String> result = new HashMap<>();
+            result.put("userId", "" + appUser.getId());
             result.put("jwt_token", jwt);
             return ResponseEntity.ok(result);
         }

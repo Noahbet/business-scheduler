@@ -26,7 +26,7 @@ public class NotificationJdbcTemplateRepository implements NotificationRepositor
     public List<Notification> getMessagesByUserId(int userId) {
 
         final String sql = "select n.notification_id, n.receiver_id, n.message, "
-                + "us.email as sender_email, ur.email as receiver_email "
+                + "us.username as sender_email, ur.username as receiver_email "
                 + "from notification n "
                 + "left join app_user us on n.sender_id = us.app_user_id "
                 + "left join app_user ur on n.receiver_id = us.app_user_id "

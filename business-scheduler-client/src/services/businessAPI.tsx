@@ -1,11 +1,22 @@
 const url = `${process.env.REACT_APP_API_URL}/business`;
 
+export async function findById(businessId: number) {
+  const response = await fetch(`${url}/${businessId}`);
+  if (response.status === 200) {
+    return await response.json();
+  } else if (response.status === 404) {
+    return Promise.reject(`Business for business ${businessId} could not be found.`);
+  } else {
+    return Promise.reject("Unexpected error :(");
+  }
+}
+
 export async function findByCategory(category: string) {
-  category.toUpperCase
   const response = await fetch(`${url}/category/${category}`);
   if (response.status === 200) {
-    return response.json();
+    return await response.json();
   } else if (response.status === 404) {
+    Promise.reject(`Businesses for category ${category} could not be found.`)
     return Promise.reject(`Businesses for category ${category} could not be found.`);
   } else {
     return Promise.reject("Unexpected error :(");
@@ -15,8 +26,9 @@ export async function findByCategory(category: string) {
 export async function findByQuery(query: string) {
   const response = await fetch(`${url}/query/${query}`);
   if (response.status === 200) {
-    return response.json();
+    return await response.json();
   } else if (response.status === 404) {
+    Promise.reject(`Businesses for category ${query} could not be found.`)
     return Promise.reject(`Businesses for query "${query}" could not be found.`);
   } else {
     return Promise.reject("Unexpected error :(");
@@ -56,7 +68,7 @@ export async function saveBusiness(business: any) {
     init.method = "POST";
     const response = await fetch(url, init);
     if (response.status === 201) {
-      return response.json();
+      return await response.json();
     } else if (response.status === 400) {
       const result = await response.json();
       return { errors: result.messages };

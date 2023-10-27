@@ -30,6 +30,10 @@ public class BusinessService {
         return repository.searchByCategory(category);
     }
 
+    public Business searchById(int businessId) {
+        return repository.searchById(businessId);
+    }
+
     public Result<Business> addBusiness(Business business) {
 
         Result<Business> result = validate(business);

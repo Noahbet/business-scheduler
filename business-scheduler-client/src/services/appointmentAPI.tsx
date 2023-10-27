@@ -1,15 +1,26 @@
 const url = `${process.env.REACT_APP_API_URL}/appointment`;
 
 export async function findByUserId(userId: number) {
-    const response = await fetch(`${url}/${userId}`);
-    if (response.status === 200) {
-      return response.json();
-    } else if (response.status === 404) {
-      return Promise.reject(`Appintments for userId ${userId} could not be found.`);
-    } else {
-      return Promise.reject("Unexpected error :(");
-    }
+  const response = await fetch(`${url}/${userId}`);
+  if (response.status === 200) {
+    return await response.json();
+  } else if (response.status === 404) {
+    return Promise.reject(`Appintments for userId ${userId} could not be found.`);
+  } else {
+    return Promise.reject("Unexpected error :(");
   }
+}
+
+export async function findByBusinessId(businessId: number) {
+  const response = await fetch(`${url}/business/${businessId}`);
+  if (response.status === 200) {
+    return response.json();
+  } else if (response.status === 404) {
+    return Promise.reject(`Appintments for businessId ${businessId} could not be found.`);
+  } else {
+    return Promise.reject("Unexpected error :(");
+  }
+}
 
 export async function saveAppointment(appointment: any) {
     const jwtToken = localStorage.getItem("jwt_token");
@@ -28,7 +39,8 @@ export async function saveAppointment(appointment: any) {
     };
     const response = await fetch(url, init);
     if (response.status === 201) {
-        return response.json();
+      console.log(response)
+        return await response.json();
     } else if (response.status === 400) {
         const result = await response.json();
         return { errors: result.messages };

@@ -1,33 +1,34 @@
-import { useContext } from "react";
-
+import { useContext, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import AuthContext from "../contexts/AuthContext";
 
-interface Service {
-    serviceId: string,
-    serviceName: string,
-    cost: number,
-}
+function ServicesList({ services } : {services:Array<any>}, { amount } : {amount:number}) {  
+    const [serviceList, setServices] = useState([{ serviceId: 0, serviceName: "", cost: 0, totalTimeLength: 0 }]);
 
-function ServicesList({services} : {services:Array<Service>}) {  
-
-    const { hasAuthority } = useContext(AuthContext);
-  
-    if (services.length > 3) {
-        services = services.slice(0, 3);
-    }
+    const auth = useContext(AuthContext);
+    
+    useEffect(() => {
+        if (services && amount) {
+            const slicedServices = services.slice(0, amount - 1);
+            if (slicedServices) {
+                setServices(slicedServices);
+            } else {
+               console.log(slicedServices)
+            }
+        }
+    }, [services, amount]);
 
     return (
-        <>
-            {
-                services.map((service:Service) => (
-                    <Link className="border border-gray-500 bg-gray-300 hover:bg-gray-600 hover:text-white w-1/10 rounded p-3 m-3" to={"/service/add/" + service.serviceId}>
-                        {service.serviceName}: ${service.cost}
-                    </Link>
-                ))
-            }
-        </>
+        <div className="flex flex-col">
+            {services.map((service:any) => (
+                <Link key={service.serviceId} className="border border-gray-500 bg-gray-300 hover:bg-gray-600 hover:text-white w-1/10 rounded p-3 m-3" to={"/appointment/add/" + service.serviceId}>
+                    {service.serviceName}: ${service.cost}
+                    <br />
+                    Time length: {service.totalTimeLength} minutes
+                </Link>
+            ))}
+        </div>
     )
 }
   

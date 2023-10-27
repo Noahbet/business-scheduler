@@ -26,8 +26,23 @@ public class BusinessController {
         this.serviceService = serviceService;
     }
 
+    @GetMapping("/{businessId}")
+    public ResponseEntity<Business> searchById(@PathVariable int businessId) {
+        Business business = service.searchById(businessId);
+
+        if (business == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        business.setAppointments(appointmentService.searchByBusinessId(business.getBusinessId()));
+        business.setAvailability(availabilityService.searchByBusinessId(business.getBusinessId()));
+        business.setServices(serviceService.getServicesForBusiness(business.getBusinessId()));
+
+        return ResponseEntity.ok(business);
+    }
+
     @GetMapping("/query/{query}")
-    public ResponseEntity<List<Business>> searchBusinesses(@PathVariable String query) {
+    public ResponseEntity<List<Business>> searchBusinessesByQuery(@PathVariable String query) {
         List<Business> businesses = service.searchBusinesses(query);
         if (businesses == null) {
             return ResponseEntity.notFound().build();
@@ -43,11 +58,17 @@ public class BusinessController {
     }
 
     @GetMapping("/category/{category}")
-    public ResponseEntity<List<Business>> searchBusinesses(@PathVariable Category category) {
-        List<Business> businesses = service.searchByCategory(category);
-        if (businesses == null) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<List<Business>> searchBusinessesByCat(@PathVariable String category) {
+
+        try {
+            Category categoryCat = Category.valueOf(category);
+        } catch (NumberFormatException e) {
+            Result<Business> result = new Result<>();
+            result.addMessage(ActionStatus.INVALID, "Invalid enum value: " + category);
+            return new ResponseEntity<>(getStatus(result, HttpStatus.NOT_FOUND));
         }
+
+        List<Business> businesses = service.searchByCategory(Category.valueOf(category));
 
         for (Business business: businesses) {
             business.setAppointments(appointmentService.searchByBusinessId(business.getBusinessId()));
@@ -64,7 +85,11 @@ public class BusinessController {
         business.getAvailability().setBusinessId(result.getPayload().getBusinessId());
 
         Result<Availability> serviceResult = availabilityService.addAvailability(business.getAvailability());
-        result.addMessage(serviceResult.getStatus(), serviceResult.getMessages().get(0));
+
+        if (!serviceResult.isSuccess()) {
+            result.addMessage(serviceResult.getStatus(), serviceResult.getMessages().get(0));
+        }
+
         if (!result.isSuccess()) {
             service.deleteBusiness(business.getBusinessId());
             return new ResponseEntity<>(result.getPayload(), getStatus(result, HttpStatus.CONFLICT));

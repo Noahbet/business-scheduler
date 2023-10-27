@@ -1,5 +1,16 @@
 const url = `${process.env.REACT_APP_API_URL}/service`;
 
+export async function findById(serviceId: number) {
+  const response = await fetch(`${url}/${serviceId}`);
+  if (response.status === 200) {
+    return await response.json();
+  } else if (response.status === 404) {
+    return Promise.reject(`Service for service id ${serviceId} could not be found.`);
+  } else {
+    return Promise.reject("Unexpected error :(");
+  }
+}
+
 export async function saveService(service: any) {
   const jwtToken = localStorage.getItem("jwt_token");
   if (!jwtToken) {

@@ -16,6 +16,9 @@ public class Service {
     @Positive(message ="Cost should be a positive number.")
     private BigDecimal cost;
 
+    public Service() {
+    }
+
     public Service(int serviceId, int businessId, String serviceName, int totalTimeLength, BigDecimal cost) {
         this.serviceId = serviceId;
         this.serviceName = serviceName;

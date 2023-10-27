@@ -213,7 +213,7 @@ public class AppointmentServiceTest {
 
     private Business makeBusiness() {
 
-        return new Business(1, "Test", 1, Category.RESTAURANT);
+        return new Business(1, "Test", 1, Category.HAIR);
     }
 
     private Availability makeAvailability() {

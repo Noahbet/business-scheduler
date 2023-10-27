@@ -22,11 +22,22 @@ public class AppointmentController {
 
     @GetMapping("/{userId}")
     public ResponseEntity<List<Appointment>> searchByUserId(@PathVariable int userId) {
-        List<Appointment> appointment = service.searchByUserId(userId);
-        if (appointment == null) {
+        List<Appointment> appointments = service.searchByUserId(userId);
+        if (appointments == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(appointment);
+        return ResponseEntity.ok(appointments);
+    }
+
+    @GetMapping("/business/{businessId}")
+    public ResponseEntity<List<Appointment>> searchByBusinessId(@PathVariable int businessId) {
+        List<Appointment> appointments = service.searchByBusinessId(businessId);
+
+        if (appointments == null) {
+            return ResponseEntity.ok().build();
+        }
+
+        return ResponseEntity.ok(appointments);
     }
 
     @PostMapping

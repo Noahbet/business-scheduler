@@ -42,7 +42,7 @@ class BusinessJdbcTemplateRepositoryTest {
 
     @Test
     void shouldSearchByCategory() {
-        List<Business> actual = repository.searchByCategory(Category.SERVICE);
+        List<Business> actual = repository.searchByCategory(Category.TATTOO);
 
         assertEquals(1, actual.size());
         assertTrue(actual.stream()
@@ -86,6 +86,6 @@ class BusinessJdbcTemplateRepositoryTest {
 
     private Business makeBusiness() {
 
-        return new Business("Test", 1, Category.RESTAURANT);
+        return new Business("Test", 1, Category.HAIR);
     }
 }

@@ -2,9 +2,12 @@ package learn.scheduler.models;
 
 public enum Category {
 
-    RETAIL(1),
-    RESTAURANT(2),
-    SERVICE(3);
+    HEALTH(1),
+    HAIR(2),
+    TATTOO(3),
+    PET(4),
+    CLEANING(5),
+    FOOD(6);
 
     private final int categoryId;
 

@@ -17,7 +17,7 @@ function LoginForm() {
   });
   const [errors, setErrors] = useState([""]);
 
-  const { handleLoggedIn } = useContext(AuthContext);
+  const auth = useContext( AuthContext );
 
   const navigate = useNavigate()
 
@@ -26,7 +26,7 @@ function LoginForm() {
     setErrors([]);
     login(credentials)
       .then(user => {
-        handleLoggedIn(user);
+        auth?.handleLoggedIn(user);
         navigate("/");
       })
       .catch(err => {
@@ -41,44 +41,46 @@ function LoginForm() {
   };
 
   return (
-    <div>
-      <ValidationSummary errors={errors} />
-      <form onSubmit={handleSubmit}>
-        <div>
-          <div className="form-group">
-            <label htmlFor="label">Username</label>
-            <input
-              type="text"
-              className="form-control"
-              id="username"
-              name="username"
-              value={credentials.username}
-              onChange={handleChange}
-              required
-            />
+    <div className="w-screen h-screen bg-gray-600 hover:bg-fixed flex flex-col items-center">
+      <div className="w-1/3 h-3/7 bg-gray-400 flex flex-col items-center rounded my-10">      
+        <ValidationSummary errors={errors} />
+        <form onSubmit={handleSubmit}>
+          <div className="p-4">
+            <div className="flex flex-col items-center">
+              <label htmlFor="username">Email</label>
+              <input
+                type="text"
+                className="m-2 border border-maroon-200 p-1 rounded"
+                id="username"
+                name="username"
+                value={credentials.username}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="flex flex-col items-center">
+              <label htmlFor="password">Password</label>
+              <input
+                type="password"
+                className="m-2 border border-maroon-200 p-1 rounded"
+                id="password"
+                name="password"
+                value={credentials.password}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="p-2 flex flex-col items-center">
+            <button type="submit" className="border border-gray-500 bg-maroon-200 hover:bg-maroon-100 p-2 m-3 rounded text-white">
+                Log in
+              </button>
+              <Link to="/" className="border border-gray-500 bg-maroon-200 hover:bg-maroon-100 p-2 rounded text-white">
+                Cancel
+              </Link>
+            </div>
           </div>
-          <div className="form-group">
-            <label htmlFor="label">Password</label>
-            <input
-              type="password"
-              className="form-control"
-              id="password"
-              name="password"
-              value={credentials.password}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div>
-            <Link to="/" className="btn btn-secondary">
-              Cancel
-            </Link>
-            <button type="submit" className="btn btn-primary">
-              Log in
-            </button>
-          </div>
+        </form>
         </div>
-      </form>
     </div>
   );
 }

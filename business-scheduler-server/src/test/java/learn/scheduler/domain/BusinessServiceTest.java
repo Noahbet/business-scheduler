@@ -36,9 +36,9 @@ public class BusinessServiceTest {
     @Test
     void shouldFindBusinessesByCategory() {
         List<Business> expected = List.of(makeBusiness(), makeBusiness());
-        when(repository.searchByCategory(Category.RESTAURANT)).thenReturn(expected);
+        when(repository.searchByCategory(Category.HAIR)).thenReturn(expected);
 
-        List<Business> actual = service.searchByCategory(Category.RESTAURANT);
+        List<Business> actual = service.searchByCategory(Category.HAIR);
 
         assertEquals(expected, actual);
     }
@@ -118,6 +118,6 @@ public class BusinessServiceTest {
 
     private Business makeBusiness() {
 
-        return new Business("Test", 1, Category.RESTAURANT);
+        return new Business("Test", 1, Category.HAIR);
     }
 }

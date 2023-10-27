@@ -139,3 +139,13 @@ insert into app_role (`name`) values
     ('USER'),
     ('OWNER'),
     ('ADMIN');
+    
+insert into business_category (category) values
+    ('HEALTH'),
+    ('HAIR'),
+    ('TATTOO'),
+    ('PET'),
+    ('CLEANING'),
+    ('FOOD');
+    
+    
