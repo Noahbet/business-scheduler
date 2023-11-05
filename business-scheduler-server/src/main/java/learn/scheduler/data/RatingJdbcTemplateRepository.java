@@ -36,23 +36,23 @@ public class RatingJdbcTemplateRepository implements RatingRepository{
     }
 
     @Override
-    public boolean addRating(int businessId, int userId, int rating) {
+    public int addRating(int businessId, int userId, int rating) {
 
         final String sql = "insert into rating "
                 + "(business_id, app_user_id, rating_value) "
                 + "values (?,?,?);";
 
-        return jdbcTemplate.update(sql, businessId, userId, (double) rating) > 0;
+        return jdbcTemplate.update(sql, businessId, userId, (double) rating);
     }
 
     @Override
-    public boolean updateRating(int businessId, int userId, int rating) {
+    public int updateRating(int businessId, int userId, int rating) {
 
         final String sql = "update rating set "
                 + "rating_value = ? "
                 + "where business_id = ? "
                 + "and app_user_id = ?;";
 
-        return jdbcTemplate.update(sql, (double) rating, businessId, userId) > 0;
+        return jdbcTemplate.update(sql, (double) rating, businessId, userId);
     }
 }

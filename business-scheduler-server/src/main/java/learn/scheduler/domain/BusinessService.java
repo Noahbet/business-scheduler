@@ -14,7 +14,6 @@ import java.util.Set;
 public class BusinessService {
 
     private final BusinessRepository repository;
-
     private final Validator validator;
 
     public BusinessService(BusinessRepository repository, Validator validator) {

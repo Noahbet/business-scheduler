@@ -1,10 +1,6 @@
 package learn.scheduler.domain;
 
-import learn.scheduler.data.AppointmentRepository;
-import learn.scheduler.data.BusinessRepository;
 import learn.scheduler.data.NotificationRepository;
-import learn.scheduler.data.ServiceRepository;
-import learn.scheduler.models.Appointment;
 import learn.scheduler.models.Notification;
 import org.springframework.stereotype.Service;
 

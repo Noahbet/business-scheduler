@@ -9,7 +9,7 @@ public interface RatingRepository {
 
     int countRatingsForBusiness(int businessId);
 
-    boolean addRating(int businessId, int userId, int rating);
+    int addRating(int businessId, int userId, int rating);
 
-    boolean updateRating(int businessId, int userId, int rating);
+    int updateRating(int businessId, int userId, int rating);
 }

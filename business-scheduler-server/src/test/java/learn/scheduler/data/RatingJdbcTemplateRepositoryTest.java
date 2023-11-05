@@ -30,7 +30,7 @@ class RatingJdbcTemplateRepositoryTest {
 
     @Test
     void shouldAddRating() {
-        assertTrue(repository.addRating(2, 2, 5));
+        assertEquals(5, repository.addRating(2, 2, 5));
     }
 
     @Test
